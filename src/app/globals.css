@@ -25,3 +25,47 @@ body {
     )
     rgb(var(--background-start-rgb));
 }
+
+/* 글로벌 h1 ~ h6 스타일링 */
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+  font-family: "Arial", sans-serif; /* 기본 폰트 설정 */
+  color: #333; /* 다크 그레이 색상 */
+  margin: 0; /* 기본 여백 제거 */
+  line-height: 1.2; /* 행 간격 설정 */
+}
+
+/* 각 헤딩 태그별 크기와 굵기 조정 */
+h1 {
+  font-size: 2.5rem; /* 가장 큰 헤딩 */
+  font-weight: 700; /* 두껍게 */
+}
+
+h2 {
+  font-size: 2rem;
+  font-weight: 600;
+}
+
+h3 {
+  font-size: 1.75rem;
+  font-weight: 600;
+}
+
+h4 {
+  font-size: 1.5rem;
+  font-weight: 500;
+}
+
+h5 {
+  font-size: 1.25rem;
+  font-weight: 500;
+}
+
+h6 {
+  font-size: 1rem;
+  font-weight: 500;
+}

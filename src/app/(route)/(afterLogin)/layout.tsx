@@ -11,21 +11,23 @@ import {
   TableOutlined,
 } from "@ant-design/icons";
 import { Button, Layout, Menu, theme } from "antd";
+import { useRouter } from "next/navigation";
 
 const { Header, Sider, Content } = Layout;
 
-const App: React.FC = () => {
+const RootLayout = ({ children }: { children: React.ReactNode }) => {
   const [collapsed, setCollapsed] = useState(false);
   const {
     token: { colorBgContainer, borderRadiusLG },
   } = theme.useToken();
+  const router = useRouter();
 
   return (
     <Layout className="min-h-screen h-screen">
       <Sider trigger={null} collapsible collapsed={collapsed}>
-        <div className="p-5">
-          <img src="/images/logo/white_1.png" alt="logo" />
-        </div>
+        <a href="/">
+          <img className="p-5" src="/images/logo/white_1.png" alt="logo" />
+        </a>
         <Menu
           theme="dark"
           mode="inline"
@@ -50,6 +52,7 @@ const App: React.FC = () => {
               key: "2",
               icon: <ScheduleOutlined />,
               label: "출결정보",
+              onClick: () => router.push("/attendance"),
             },
             {
               key: "3",
@@ -91,11 +94,11 @@ const App: React.FC = () => {
             borderRadius: borderRadiusLG,
           }}
         >
-          Content
+          {children}
         </Content>
       </Layout>
     </Layout>
   );
 };
 
-export default App;
+export default RootLayout;
