@@ -9,8 +9,9 @@ import {
   PieChartOutlined,
   ScheduleOutlined,
   TableOutlined,
+  UserOutlined,
 } from "@ant-design/icons";
-import { Button, Layout, Menu, theme } from "antd";
+import { Avatar, Button, Layout, Menu, Popover, theme } from "antd";
 import { useRouter } from "next/navigation";
 
 const { Header, Sider, Content } = Layout;
@@ -21,6 +22,15 @@ const RootLayout = ({ children }: { children: React.ReactNode }) => {
     token: { colorBgContainer, borderRadiusLG },
   } = theme.useToken();
   const router = useRouter();
+  const [open, setOpen] = useState(false);
+
+  const hide = () => {
+    setOpen(false);
+  };
+
+  const handleOpenChange = (newOpen: boolean) => {
+    setOpen(newOpen);
+  };
 
   return (
     <Layout className="min-h-screen h-screen">
@@ -73,17 +83,37 @@ const RootLayout = ({ children }: { children: React.ReactNode }) => {
         />
       </Sider>
       <Layout>
-        <Header style={{ padding: 0, background: colorBgContainer }}>
+        <Header
+          className="!py-0 !px-5 flex items-center justify-between"
+          style={{ background: colorBgContainer }}
+        >
           <Button
             type="text"
             icon={collapsed ? <MenuUnfoldOutlined /> : <MenuFoldOutlined />}
             onClick={() => setCollapsed(!collapsed)}
-            style={{
-              fontSize: "16px",
-              width: 64,
-              height: 64,
-            }}
+            className="text-[16px]"
           />
+          <div className="flex items-center gap-3">
+            <div>송우진 님</div>
+            <Popover
+              content={
+                <div className="p-0">
+                  <button
+                    onClick={() => {}}
+                    className="px-3 rounded-[4px] py-1 hover:bg-gray-100"
+                  >
+                    로그아웃
+                  </button>
+                </div>
+              }
+              // title="Title"
+              trigger="click"
+              open={open}
+              onOpenChange={handleOpenChange}
+            >
+              <Avatar className="cursor-pointer" icon={<UserOutlined />} />
+            </Popover>
+          </div>
         </Header>
         <Content
           style={{
