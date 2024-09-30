@@ -68,6 +68,18 @@ const RootLayout = ({ children }: { children: React.ReactNode }) => {
               key: "3",
               icon: <EditOutlined />,
               label: "테스트 결과",
+              children: [
+                {
+                  key: "3-1",
+                  label: "국어",
+                  onClick: () => router.push("/test?subject=ko"),
+                },
+                {
+                  key: "3-2",
+                  label: "영어",
+                  onClick: () => router.push("/test?subject=en"),
+                },
+              ],
             },
             {
               key: "4",

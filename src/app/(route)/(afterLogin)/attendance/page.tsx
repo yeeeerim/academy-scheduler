@@ -31,7 +31,6 @@ const AttendancePage = () => {
             return <h3 className="mb-3">{dayjs(value.value).format("M월")}</h3>;
           }}
           cellRender={(current, info) => {
-            console.log("🚀 ~ AttendancePage ~ current:", current);
             if (dayjs(current).isSame(dayjs("2024-09-02")))
               return (
                 <div className="text-[10px] leading-4 text-red-700">
