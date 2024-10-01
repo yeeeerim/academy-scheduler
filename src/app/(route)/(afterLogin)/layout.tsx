@@ -24,10 +24,6 @@ const RootLayout = ({ children }: { children: React.ReactNode }) => {
   const router = useRouter();
   const [open, setOpen] = useState(false);
 
-  const hide = () => {
-    setOpen(false);
-  };
-
   const handleOpenChange = (newOpen: boolean) => {
     setOpen(newOpen);
   };

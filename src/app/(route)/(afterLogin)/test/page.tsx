@@ -6,6 +6,7 @@ import { useSearchParams } from "next/navigation";
 import React from "react";
 
 import "dayjs/locale/ko"; // 한국어 로케일을 불러옴
+import { CheckCircleOutlined, MinusCircleOutlined } from "@ant-design/icons";
 
 // 로케일 설정
 dayjs.locale("ko");
@@ -91,13 +92,39 @@ const page = () => {
       title: "오답 점검",
       key: "isCheck",
       dataIndex: "isCheck",
-      render: (isCheck) => <div>{isCheck ? "완료" : "미완료"}</div>,
+      render: (isCheck) => {
+        if (isCheck)
+          return (
+            <Tag color={"processing"} icon={<CheckCircleOutlined />}>
+              완료
+            </Tag>
+          );
+        else
+          return (
+            <Tag color={"default"} icon={<MinusCircleOutlined />}>
+              미완료
+            </Tag>
+          );
+      },
     },
     {
       title: "응시",
       key: "isParticipant",
       dataIndex: "isParticipant",
-      render: (isParticipant) => <div>{isParticipant ? "응시" : "미응시"}</div>,
+      render: (isParticipant) => {
+        if (isParticipant)
+          return (
+            <Tag color={"processing"} icon={<CheckCircleOutlined />}>
+              응시
+            </Tag>
+          );
+        else
+          return (
+            <Tag color={"default"} icon={<MinusCircleOutlined />}>
+              미응시
+            </Tag>
+          );
+      },
     },
     {
       title: "미응시 사유",
@@ -111,10 +138,18 @@ const page = () => {
 
   return (
     <div className="flex flex-col gap-5 text-center">
-      <h3>{title} 어휘 테스트 결과</h3>
+      <h4>{title} 어휘 테스트 결과</h4>
       <Table<DataType>
         columns={columns.map((c) => ({ ...c, align: "center" }))}
         dataSource={Dummy}
+        size="small"
+        pagination={false}
+        footer={() => (
+          <ul className="text-left text-[12px]">
+            <li>※ 월금 9:40~10:00 실시</li>
+            <li>※ 테스트 결과는 매주 금요일 저녁에 업데이트됩니다.</li>
+          </ul>
+        )}
       />
     </div>
   );
