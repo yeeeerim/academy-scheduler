@@ -3,7 +3,7 @@
 import { Table, Tag, Space, TableProps } from "antd";
 import dayjs, { Dayjs } from "dayjs";
 import { useSearchParams } from "next/navigation";
-import React from "react";
+import React, { Suspense } from "react";
 
 import "dayjs/locale/ko"; // 한국어 로케일을 불러옴
 import { CheckCircleOutlined, MinusCircleOutlined } from "@ant-design/icons";
@@ -56,9 +56,9 @@ const Dummy: DataType[] = [
 ];
 
 const page = () => {
-  const params = useSearchParams();
-  const subject = params.get("subject");
-  const title = subject === "ko" ? "국어" : "영어";
+  // const params = useSearchParams();
+  // const subject = params.get("subject") || "";
+  // const title = subject === "ko" ? "국어" : "영어";
 
   const columns: TableProps<DataType>["columns"] = [
     {
@@ -138,7 +138,7 @@ const page = () => {
 
   return (
     <div className="flex flex-col gap-5 text-center">
-      <h4>{title} 어휘 테스트 결과</h4>
+      <h4>어휘 테스트 결과</h4>
       <Table<DataType>
         columns={columns.map((c) => ({ ...c, align: "center" }))}
         dataSource={Dummy}
