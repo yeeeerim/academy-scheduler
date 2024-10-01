@@ -1,12 +1,9 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import {
-  BookOutlined,
-  EditOutlined,
   MenuFoldOutlined,
   MenuUnfoldOutlined,
-  PieChartOutlined,
   ScheduleOutlined,
   TableOutlined,
   UserOutlined,
@@ -14,19 +11,47 @@ import {
 import { Avatar, Button, Layout, Menu, Popover, theme } from "antd";
 import { useRouter } from "next/navigation";
 import { SWRConfig } from "swr";
+import { useMediaQuery } from "react-responsive";
 
 const { Header, Sider, Content } = Layout;
 
 const RootLayout = ({ children }: { children: React.ReactNode }) => {
+  const isMobile = useMediaQuery({
+    query: "(max-width:480px)",
+  });
+
   const [collapsed, setCollapsed] = useState(false);
   const {
     token: { colorBgContainer, borderRadiusLG },
   } = theme.useToken();
   const router = useRouter();
   const [open, setOpen] = useState(false);
+  const isMount = useRef(false);
 
   const handleOpenChange = (newOpen: boolean) => {
     setOpen(newOpen);
+  };
+
+  useEffect(() => {
+    if (collapsed) isMount.current = true;
+  }, [collapsed]);
+
+  const ref: any = useRef(null);
+  // 영역 외 클릭 감지
+  useEffect(() => {
+    const handleOutside = (e: any) => {
+      if (ref.current && !ref.current.contains(e.target) && isMobile)
+        setCollapsed(true);
+    };
+    document.addEventListener("mousedown", handleOutside);
+    return () => {
+      document.removeEventListener("mousedown", handleOutside);
+    };
+  }, [ref, isMobile]);
+
+  const navigate = (url: string) => {
+    router.push(url);
+    if (isMobile && !collapsed) setCollapsed(true);
   };
 
   return (
@@ -39,7 +64,27 @@ const RootLayout = ({ children }: { children: React.ReactNode }) => {
       }}
     >
       <Layout className="!min-h-screen h-max">
-        <Sider trigger={null} collapsible collapsed={collapsed}>
+        {!collapsed && isMount.current && (
+          <div
+            id="dim"
+            className="hidden sm:block sm:w-full sm:h-full sm:bg-[#00000082] sm:z-10 sm:absolute"
+          />
+        )}
+        <Sider
+          ref={ref}
+          breakpoint="sm"
+          onBreakpoint={(broken) => {
+            if (broken) setCollapsed(true);
+            else setCollapsed(false);
+          }}
+          trigger={null}
+          collapsible
+          collapsed={collapsed}
+          collapsedWidth={0}
+          className={`sm:!fixed ${
+            !isMount.current ? "sm:hidden" : ""
+          }  sm:!left-0 !sm:top-0 sm:!h-full sm:z-20 sm:shadow-[2px_2px_10px_0#333]`}
+        >
           <a href="/">
             <img className="p-5" src="/images/logo/white_1.png" alt="logo" />
           </a>
@@ -56,12 +101,12 @@ const RootLayout = ({ children }: { children: React.ReactNode }) => {
                   {
                     key: "1-1",
                     label: "주간시간표",
-                    onClick: () => router.push("/weekly-schedule"),
+                    onClick: () => navigate("/weekly-schedule"),
                   },
                   {
                     key: "1-2",
                     label: "월간시간표",
-                    onClick: () => router.push("/monthly-schedule"),
+                    onClick: () => navigate("/monthly-schedule"),
                   },
                 ],
               },
@@ -69,7 +114,7 @@ const RootLayout = ({ children }: { children: React.ReactNode }) => {
                 key: "2",
                 icon: <ScheduleOutlined />,
                 label: "출결정보",
-                onClick: () => router.push("/attendance"),
+                onClick: () => navigate("/attendance"),
               },
               // {
               //   key: "3",
@@ -79,12 +124,12 @@ const RootLayout = ({ children }: { children: React.ReactNode }) => {
               //     {
               //       key: "3-1",
               //       label: "국어",
-              //       onClick: () => router.push("/test-results?subject=ko"),
+              //       onClick: () => navigate("/test-results?subject=ko"),
               //     },
               //     {
               //       key: "3-2",
               //       label: "영어",
-              //       onClick: () => router.push("/test-results?subject=en"),
+              //       onClick: () => navigate("/test-results?subject=en"),
               //     },
               //   ],
               // },
@@ -92,13 +137,13 @@ const RootLayout = ({ children }: { children: React.ReactNode }) => {
               //   key: "4",
               //   icon: <PieChartOutlined />,
               //   label: "월말평가",
-              //   onClick: () => router.push("/monthly-evaluation"),
+              //   onClick: () => navigate("/monthly-evaluation"),
               // },
               // {
               //   key: "5",
               //   icon: <BookOutlined />,
               //   label: "자습교재 현황",
-              //   onClick: () => router.push("/self-study-materials"),
+              //   onClick: () => navigate("/self-study-materials"),
               // },
             ]}
           />
@@ -144,6 +189,7 @@ const RootLayout = ({ children }: { children: React.ReactNode }) => {
               background: colorBgContainer,
               borderRadius: borderRadiusLG,
             }}
+            className="sm:!mx-0 sm:!rounded-none sm:!my-3 sm:!px-3"
           >
             {children}
           </Content>
