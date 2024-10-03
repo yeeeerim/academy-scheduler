@@ -12,6 +12,8 @@ import { Avatar, Button, Layout, Menu, Popover, theme } from "antd";
 import { useRouter } from "next/navigation";
 import { SWRConfig } from "swr";
 import { useMediaQuery } from "react-responsive";
+import { deleteCookie } from "cookies-next";
+import toast from "react-hot-toast";
 
 const { Header, Sider, Content } = Layout;
 
@@ -27,6 +29,11 @@ const RootLayout = ({ children }: { children: React.ReactNode }) => {
   const router = useRouter();
   const [open, setOpen] = useState(false);
   const isMount = useRef(false);
+  const [username, setUsername] = useState("");
+
+  useEffect(() => {
+    if (isMount) setUsername(localStorage.getItem("u_name"));
+  }, [isMount]);
 
   const handleOpenChange = (newOpen: boolean) => {
     setOpen(newOpen);
@@ -52,6 +59,13 @@ const RootLayout = ({ children }: { children: React.ReactNode }) => {
   const navigate = (url: string) => {
     router.push(url);
     if (isMobile && !collapsed) setCollapsed(true);
+  };
+
+  const logout = () => {
+    toast.success("로그아웃 되었습니다.");
+    // deleteCookie("authToken");
+    document.cookie = "authToken=; Max-Age=0; path=/;";
+    router.replace("/login");
   };
 
   return (
@@ -160,12 +174,12 @@ const RootLayout = ({ children }: { children: React.ReactNode }) => {
               className="text-[16px]"
             />
             <div className="flex items-center gap-3">
-              <div>송우진 님</div>
+              <div>{username} 님</div>
               <Popover
                 content={
                   <div className="p-0">
                     <button
-                      onClick={() => {}}
+                      onClick={logout}
                       className="px-3 rounded-[4px] py-1 hover:bg-gray-100"
                     >
                       로그아웃
