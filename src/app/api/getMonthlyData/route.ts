@@ -14,16 +14,16 @@ export async function GET(request: Request) {
     const sheets = google.sheets({ version: "v4", auth: auth });
 
     const spreadsheetId = "1xwR133yh4OEcx3zfhdRUkzd6Tfy95aX2yIyAhoEs2PE";
-    const range = `전체 일정!B5:H25`;
+    const ranges = [`전체 일정!B5:H25`, `전체 일정!B28:H48`];
 
-    const response = await sheets.spreadsheets.values.get({
+    const response = await sheets.spreadsheets.values.batchGet({
       spreadsheetId,
-      range,
+      ranges,
     });
 
-    const values = response.data.values;
+    const [value1, value2, ...rest] = response.data.valueRanges;
 
-    return NextResponse.json({ data: values });
+    return NextResponse.json({ data: [value1, value2] });
   } catch (error) {
     throw new Error("Error fetching data from Google Spreadsheet");
   }
