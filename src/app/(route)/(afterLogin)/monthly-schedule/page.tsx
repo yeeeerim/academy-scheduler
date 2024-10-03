@@ -9,15 +9,15 @@ const page = () => {
   const [month, setMonth] = useState(0);
   const { data, error, isLoading } = useSWR("/api/getMonthlyData", () =>
     fetch(`/api/getMonthlyData`).then(async (res) => {
-      const { data } = await res.json();
-      return data;
+      const { data, data2 } = await res.json();
+      return [data, data2];
     })
   );
 
   if (isLoading) return <div>Loading...</div>;
   if (error) return <div>Error: {error}</div>;
 
-  const titles = [data[0].values[0][0], data[1].values[0][0]];
+  const titles = [data[0][0][0], data[1][0][0]];
 
   return (
     <div className="h-full flex flex-col w-full gap-5">
@@ -34,8 +34,8 @@ const page = () => {
           { label: titles[1], value: 1 },
         ]}
       />
-      <div className="text-center grid grid-cols-7 row-span-5">
-        {data[month].values.slice(1).map((row: string[], rowIndex: number) => {
+      <div className="text-center grid grid-cols-7 gap-x-1 row-span-5">
+        {data[month].slice(1).map((row: string[], rowIndex: number) => {
           const arr = row;
           while (arr.length < 7) {
             arr.push("");
@@ -46,7 +46,7 @@ const page = () => {
             const isSaturday = cellIndex === 6;
             return (
               <div
-                className={`h-[30px] ${
+                className={`h-[30px] flex flex-col gap-1 ${
                   isText
                     ? ""
                     : isSunday
@@ -57,7 +57,17 @@ const page = () => {
                 }`}
                 key={cellIndex}
               >
-                {isText ? <Tag className="!m-0">{cell}</Tag> : <>{cell}</>}
+                {isText ? (
+                  cell.split("\n").map((line, index) => (
+                    <React.Fragment key={index}>
+                      <Tag className="!m-0">
+                        <div className="truncate">{line}</div>
+                      </Tag>
+                    </React.Fragment>
+                  ))
+                ) : (
+                  <>{cell}</>
+                )}
               </div>
             );
           });
