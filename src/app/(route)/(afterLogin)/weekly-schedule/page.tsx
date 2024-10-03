@@ -1,5 +1,6 @@
 "use client";
 
+import { CalendarTwoTone } from "@ant-design/icons";
 import React from "react";
 import useSWR from "swr";
 
@@ -15,8 +16,11 @@ const page = () => {
   if (error) return <div>Error: {error}</div>;
 
   return (
-    <div className="flex flex-col gap-4">
-      <h4>윈터 시간표</h4>
+    <div className="flex flex-col gap-5">
+      <h5 className="flex items-center gap-2">
+        <CalendarTwoTone className="" />
+        주간 시간표
+      </h5>
       <SpreadsheetTable values={data.values} mergedCells={data.mergedCells} />
     </div>
   );
@@ -62,11 +66,11 @@ const SpreadsheetTable = ({
   };
   const columnCount = values[0]?.length || 0;
   return (
-    <table className="text-center border border-black max-w-[700px]">
+    <table className="text-center border border-gray-200 max-w-[700px]">
       <colgroup>
-        <col style={{ width: `30%` }} />
+        <col style={{ width: `16%` }} />
         {Array.from({ length: columnCount - 1 }, (_, index) => (
-          <col key={index} style={{ width: `10%` }} />
+          <col key={index} style={{ width: `12%` }} />
         ))}
       </colgroup>
       <tbody>
@@ -87,7 +91,10 @@ const SpreadsheetTable = ({
                 }
 
                 const { rowspan, colspan } = getCellSpan(rowIndex, colIndex);
-                const bgColor = subjectColors[cell || ""] || ""; // Get the color for the subject
+                const bgColor =
+                  cIndex === 0 || rIndex === 0 || !cell
+                    ? "#FFF"
+                    : subjectColors[cell || ""] || ""; // Get the color for the subject
 
                 return (
                   <td
@@ -96,25 +103,28 @@ const SpreadsheetTable = ({
                     colSpan={colspan}
                     style={{
                       height: rowspan * 24,
-                      backgroundColor:
-                        cIndex === 0 || rIndex === 0 || !cell
-                          ? "#FFF"
-                          : bgColor, // Set the background color
                     }}
-                    className={`border-black px-2 ${
+                    className={`border-gray-200 px-1 py-1 text-[#333] ${
                       cIndex === 0 ? "text-[11px]" : "text-[12px]"
                     } ${cell ? "border" : "border-r"}`}
                   >
-                    {cell
-                      ? cell.split("\n").map((line, index) => (
-                          <React.Fragment key={index}>
-                            {line}
-                            {index < row.length - 1 && <br />}{" "}
-                            {/* Insert <br /> for line breaks */}
-                          </React.Fragment>
-                        ))
-                      : ""}
-                    {/* Display empty string if cell is undefined */}
+                    <div
+                      className="rounded-[6px] h-full w-full flex flex-col items-center justify-center"
+                      style={{
+                        backgroundColor: bgColor,
+                      }}
+                    >
+                      {cell
+                        ? cell.split("\n").map((line, index) => (
+                            <React.Fragment key={index}>
+                              {line}
+                              {index < row.length - 1 && <br />}{" "}
+                              {/* Insert <br /> for line breaks */}
+                            </React.Fragment>
+                          ))
+                        : ""}
+                      {/* Display empty string if cell is undefined */}
+                    </div>
                   </td>
                 );
               })}
@@ -130,8 +140,9 @@ const createSubjectColorMapping = (values: string[][]) => {
   const subjectColors: { [key: string]: string } = {};
   let colorIndex = 0;
 
-  values.forEach((row) => {
-    row.forEach((subject) => {
+  values.forEach((row, rIndex) => {
+    row.forEach((subject, cIndex) => {
+      if (cIndex === 0 || rIndex === 0 || !subject) return;
       if (!subjectColors[subject]) {
         // Only assign a color if it hasn't been assigned yet
         subjectColors[subject] = generateColor(colorIndex);
@@ -143,40 +154,38 @@ const createSubjectColorMapping = (values: string[][]) => {
   return subjectColors;
 };
 
+// 30개
 const colorPalette = [
-  "#FFB3BA", // Pastel Pink
-  "#FFDFBA", // Pastel Orange
-  "#FFFFBA", // Pastel Yellow
-  "#BAFFC9", // Pastel Green
-  "#BAE1FF", // Pastel Blue
-  "#FFC3A0", // Pastel Coral
-  "#FF677D", // Pastel Red
-  "#D4A5A5", // Pastel Dusty Rose
-  "#9995a6", // Pastel Lavender
-  "#FF8C94", // Pastel Salmon
-  "#FFE156", // Pastel Lemon
-  "#B9FBC0", // Pastel Mint
-  "#A0CED9", // Pastel Teal
-  "#C7CEEA", // Pastel Periwinkle
-  "#D8B4D0", // Pastel Lilac
-  "#F5E3B3", // Pastel Cream
-  "#C8D7F5", // Pastel Sky Blue
-  "#F7B2B7", // Pastel Watermelon
-  "#FFDDC1", // Pastel Peach
-  "#D3C6E7", // Pastel Mauve
-  "#E6B89C", // Pastel Tan
-  "#A7C957", // Pastel Olive
-  "#B4C9E7", // Pastel Steel Blue
-  "#F7D3B4", // Pastel Apricot
-  "#F1A7A1", // Pastel Rose
-  "#D1E8E4", // Pastel Seafoam
-  "#EAB8D1", // Pastel Blush
-  "#FFC9DE", // Pastel Flamingo
-  "#B5EAD7", // Pastel Mint Green
-  "#FFD6A5", // Pastel Light Apricot
-  "#C4E17F", // Pastel Light Green
-  "#B3B2D8", // Pastel Periwinkle
-  "#FF9A8D", // Pastel Red Coral
+  "#ffb3bbaa", // Pastel Pink
+  "#FFE156aa", // Pastel Lemon
+  "#FFDFBAaa", // Pastel Orange
+  "#ffff76aa", // Pastel Yellow
+  "#dbf3a3aa", // Pastel Olive
+  "#BAE1FFaa", // Pastel Blue
+  "#D8B4D0aa", // Pastel Lilac
+  "#FFC3A0aa", // Pastel Coral
+  "#FF9A8Daa", // Pastel Red Coral
+  "#D4A5A5aa", // Pastel Dusty Rose
+  "#9995a6aa", // Pastel Lavender
+  "#FF8C94aa", // Pastel Salmon
+  "#A0CED9aa", // Pastel Teal
+  "#C7CEEAaa", // Pastel Periwinkle
+  "#F5E3B3aa", // Pastel Cream
+  "#C8D7F5aa", // Pastel Sky Blue
+  "#F7B2B7aa", // Pastel Watermelon
+  "#FFDDC1aa", // Pastel Peach
+  "#D3C6E7aa", // Pastel Mauve
+  "#E6B89Caa", // Pastel Tan
+  "#B4C9E7aa", // Pastel Steel Blue
+  "#F7D3B4aa", // Pastel Apricot
+  "#F1A7A1aa", // Pastel Rose
+  "#D1E8E4aa", // Pastel Seafoam
+  "#EAB8D1aa", // Pastel Blush
+  "#FFC9DEaa", // Pastel Flamingo
+  "#B5EAD7aa", // Pastel Mint Green
+  "#FFD6A5aa", // Pastel Light Apricot
+  "#C4E17Faa", // Pastel Light Green
+  "#B3B2D8aa", // Pastel Periwinkle
 ];
 
 const generateColor = (index: number): string => {
