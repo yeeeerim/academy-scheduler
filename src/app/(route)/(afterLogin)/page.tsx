@@ -3,7 +3,7 @@
 import React from "react";
 
 const MainPage: React.FC = () => {
-  return <div>Main</div>;
+  return <div></div>;
 };
 
 export default MainPage;

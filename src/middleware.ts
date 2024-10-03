@@ -17,6 +17,10 @@ export function middleware(req: NextRequest) {
     return NextResponse.redirect(new URL("/login", req.url));
   }
 
+  if (pathname === "/") {
+    return NextResponse.redirect(new URL("/weekly-schedule", req.url));
+  }
+
   // Continue to the requested page if the token is present
   return NextResponse.next();
 }
