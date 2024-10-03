@@ -27,7 +27,12 @@ const LoginPage = () => {
     // console.log("Success:", values);
     if (values.username === User.id && values.password === User.pw) {
       toast.success("로그인 성공");
-      setCookie("authToken", User.sheet_id);
+      const now = new Date();
+      now.setTime(now.getTime() + 30 * 60 * 1000);
+
+      setCookie("authToken", User.sheet_id, {
+        expires: now,
+      });
       localStorage.setItem("di_s", User.sheet_id);
       localStorage.setItem("u_name", User.name);
       router.replace("/");
