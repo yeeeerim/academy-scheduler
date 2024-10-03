@@ -14,7 +14,7 @@ export async function GET(request: Request) {
     const sheets = google.sheets({ version: "v4", auth: auth });
 
     const spreadsheetId = "1xwR133yh4OEcx3zfhdRUkzd6Tfy95aX2yIyAhoEs2PE";
-    const ranges = [`전체 일정!B5:H25`, `전체 일정!B28:H48`];
+    const ranges = [`전체 일정!B4:H25`, `전체 일정!B27:H48`];
 
     const response = await sheets.spreadsheets.values.batchGet({
       spreadsheetId,

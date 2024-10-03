@@ -17,6 +17,8 @@ const page = () => {
   if (isLoading) return <div>Loading...</div>;
   if (error) return <div>Error: {error}</div>;
 
+  const titles = [data[0].values[0][0], data[1].values[0][0]];
+
   return (
     <div className="h-full flex flex-col w-full gap-5">
       <h5 className="flex items-center gap-2">
@@ -28,12 +30,12 @@ const page = () => {
         value={month}
         onChange={(v) => setMonth(v)}
         options={[
-          { label: "1월 일정표", value: 0 },
-          { label: "2월 일정표", value: 1 },
+          { label: titles[0], value: 0 },
+          { label: titles[1], value: 1 },
         ]}
       />
       <div className="text-center grid grid-cols-7 row-span-5">
-        {data[month].values.map((row: string[], rowIndex: number) => {
+        {data[month].values.slice(1).map((row: string[], rowIndex: number) => {
           const arr = row;
           while (arr.length < 7) {
             arr.push("");
