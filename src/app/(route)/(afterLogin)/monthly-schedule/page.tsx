@@ -7,11 +7,17 @@ import useSWR from "swr";
 
 const page = () => {
   const [month, setMonth] = useState(0);
-  const { data, error, isLoading } = useSWR("/api/getMonthlyData", () =>
-    fetch(`/api/getMonthlyData`).then(async (res) => {
-      const { data, data2 } = await res.json();
-      return [data, data2];
-    })
+  const { data, error, isLoading } = useSWR(
+    "/api/getMonthlyData",
+    () =>
+      fetch(`/api/getMonthlyData`).then(async (res) => {
+        const { data, data2 } = await res.json();
+        return [data, data2];
+      }),
+    {
+      refreshInterval: 60000, // Revalidate every 60 seconds
+      revalidateOnFocus: true, // Revalidate when the window regains focus
+    }
   );
 
   if (isLoading) return <div>Loading...</div>;
