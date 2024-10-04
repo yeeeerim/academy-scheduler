@@ -5,17 +5,11 @@ import React from "react";
 import useSWR from "swr";
 
 const page = () => {
-  const { data, error, isLoading } = useSWR(
-    "/api/getWeeklyData",
-    () =>
-      fetch(`/api/getWeeklyData`).then(async (res) => {
-        const { data, mergedCells } = await res.json();
-        return { values: data, mergedCells };
-      }),
-    {
-      refreshInterval: 60000, // Revalidate every 60 seconds
-      revalidateOnFocus: true, // Revalidate when the window regains focus
-    }
+  const { data, error, isLoading } = useSWR("/api/getWeeklyData", () =>
+    fetch(`/api/getWeeklyData`).then(async (res) => {
+      const { data, mergedCells } = await res.json();
+      return { values: data, mergedCells };
+    })
   );
 
   if (isLoading) return <div>Loading...</div>;

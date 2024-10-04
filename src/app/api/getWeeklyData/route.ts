@@ -1,6 +1,7 @@
 import { google } from "googleapis";
 import { NextResponse } from "next/server";
 
+export const fetchCache = "force-no-store";
 export async function GET(request: Request) {
   try {
     const auth = new google.auth.GoogleAuth({
@@ -30,13 +31,7 @@ export async function GET(request: Request) {
 
     const mergedCells = response.data.sheets?.[0].merges || []; // Get merged cells
 
-    // Create a new response and set the Cache-Control header to no-store
-    const res = NextResponse.json({ data: values, mergedCells });
-
-    // Set the Cache-Control header to no-store to prevent caching
-    res.headers.set("Cache-Control", "no-cache");
-
-    return res;
+    return NextResponse.json({ data: values, mergedCells });
   } catch (error) {
     throw new Error("Error fetching data from Google Spreadsheet");
   }
