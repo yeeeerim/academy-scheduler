@@ -34,7 +34,7 @@ export async function GET(request: Request) {
     const res = NextResponse.json({ data: values, mergedCells });
 
     // Set the Cache-Control header to no-store to prevent caching
-    res.headers.set("Cache-Control", "no-store");
+    res.headers.set("Cache-Control", "no-cache");
 
     return res;
   } catch (error) {
