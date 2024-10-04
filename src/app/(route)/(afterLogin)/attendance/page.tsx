@@ -9,17 +9,11 @@ import useSWR from "swr";
 const AttendancePage = () => {
   const [month, setMonth] = useState(0);
 
-  const { data, error, isLoading } = useSWR(
-    "/api/getAttendanceData",
-    () =>
-      fetch(`/api/getAttendanceData`).then(async (res) => {
-        const { data } = await res.json();
-        return [data[0].values, data[1].values];
-      }),
-    {
-      refreshInterval: 60000, // Revalidate every 60 seconds
-      revalidateOnFocus: true, // Revalidate when the window regains focus
-    }
+  const { data, error, isLoading } = useSWR("/api/getAttendanceData", () =>
+    fetch(`/api/getAttendanceData`).then(async (res) => {
+      const { data } = await res.json();
+      return [data[0].values, data[1].values];
+    })
   );
 
   if (isLoading) return <div>Loading...</div>;
