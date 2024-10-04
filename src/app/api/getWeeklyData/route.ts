@@ -30,7 +30,13 @@ export async function GET(request: Request) {
 
     const mergedCells = response.data.sheets?.[0].merges || []; // Get merged cells
 
-    return NextResponse.json({ data: values, mergedCells });
+    // Create a new response and set the Cache-Control header to no-store
+    const res = NextResponse.json({ data: values, mergedCells });
+
+    // Set the Cache-Control header to no-store to prevent caching
+    res.headers.set("Cache-Control", "no-store");
+
+    return res;
   } catch (error) {
     throw new Error("Error fetching data from Google Spreadsheet");
   }
