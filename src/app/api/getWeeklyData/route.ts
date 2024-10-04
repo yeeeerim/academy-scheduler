@@ -1,7 +1,7 @@
 import { google } from "googleapis";
 import { NextResponse } from "next/server";
 
-export const fetchCache = "force-no-store";
+// export const fetchCache = "force-no-store";
 export async function GET(request: Request) {
   try {
     const auth = new google.auth.GoogleAuth({
@@ -36,3 +36,4 @@ export async function GET(request: Request) {
     throw new Error("Error fetching data from Google Spreadsheet");
   }
 }
+export const revalidate = 0;
