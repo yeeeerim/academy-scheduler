@@ -48,3 +48,4 @@ export async function GET(request: Request) {
     throw new Error("Error fetching data from Google Spreadsheet");
   }
 }
+export const revalidate = 0;
