@@ -4,7 +4,7 @@ export const metadata = {
 
 const RootLayout = ({ children }: { children: React.ReactNode }) => {
   return (
-    <div className="min-h-screen h-max flex items-center flex-col justify-center">
+    <div className="min-h-screen h-max flex items-center flex-col justify-center max-h-screen">
       {children}
     </div>
   );

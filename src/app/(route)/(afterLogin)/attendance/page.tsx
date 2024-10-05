@@ -22,11 +22,7 @@ const AttendancePage = () => {
   const titles = [data[0][0][0], data[1][0][0]];
 
   return (
-    <div className="w-[400px] max-w-[90vw] flex flex-col gap-5">
-      <h5 className="flex items-center gap-2">
-        <ScheduleTwoTone />
-        출결정보
-      </h5>
+    <div className="flex flex-col gap-5">
       <Segmented
         className="w-fit"
         value={month}

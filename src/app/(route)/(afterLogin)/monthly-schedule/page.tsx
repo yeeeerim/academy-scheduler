@@ -1,6 +1,5 @@
 "use client";
 
-import { CalendarTwoTone } from "@ant-design/icons";
 import { Segmented, Tag } from "antd";
 import React, { useState } from "react";
 import useSWR from "swr";
@@ -21,10 +20,6 @@ const page = () => {
 
   return (
     <div className="h-full flex flex-col w-full gap-5">
-      <h5 className="flex items-center gap-2">
-        <CalendarTwoTone className="" />
-        월간 시간표
-      </h5>
       <Segmented
         className="w-fit"
         value={month}

@@ -12,7 +12,6 @@ import { Avatar, Button, Layout, Menu, Popover, theme } from "antd";
 import { useRouter } from "next/navigation";
 import { SWRConfig } from "swr";
 import { useMediaQuery } from "react-responsive";
-import { deleteCookie } from "cookies-next";
 import toast from "react-hot-toast";
 
 const { Header, Sider, Content } = Layout;
@@ -24,7 +23,7 @@ const RootLayout = ({ children }: { children: React.ReactNode }) => {
 
   const [collapsed, setCollapsed] = useState(false);
   const {
-    token: { colorBgContainer, borderRadiusLG },
+    token: { colorBgContainer },
   } = theme.useToken();
   const router = useRouter();
   const [open, setOpen] = useState(false);
@@ -162,9 +161,9 @@ const RootLayout = ({ children }: { children: React.ReactNode }) => {
             ]}
           />
         </Sider>
-        <Layout>
+        <Layout className="">
           <Header
-            className="!py-0 !px-5 flex items-center justify-between"
+            className="!py-0 !px-5 flex w-full items-center justify-between sm:fixed sm:shadow-[1px_1px_10px_0#eee]"
             style={{ background: colorBgContainer }}
           >
             <Button
@@ -195,16 +194,7 @@ const RootLayout = ({ children }: { children: React.ReactNode }) => {
               </Popover>
             </div>
           </Header>
-          <Content
-            style={{
-              margin: "24px 16px",
-              padding: 24,
-              minHeight: 280,
-              background: colorBgContainer,
-              borderRadius: borderRadiusLG,
-            }}
-            className="sm:!mx-0 sm:!rounded-none sm:!my-3 sm:!px-3"
-          >
+          <Content className="min-h-[280px] my-6 mx-4 sm:!mx-0 sm:!my-3 sm:!px-0 sm:!mt-[80px]">
             {children}
           </Content>
         </Layout>

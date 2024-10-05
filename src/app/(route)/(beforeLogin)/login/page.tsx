@@ -28,7 +28,7 @@ const LoginPage = () => {
     if (values.username === User.id && values.password === User.pw) {
       toast.success("로그인 성공");
       const now = new Date();
-      now.setTime(now.getTime() + 30 * 60 * 1000);
+      now.setTime(now.getTime() + 30 * 60 * 1000); // 30분
 
       setCookie("authToken", User.sheet_id, {
         expires: now,

@@ -1,6 +1,5 @@
 "use client";
 
-import { CalendarTwoTone } from "@ant-design/icons";
 import React from "react";
 import useSWR from "swr";
 
@@ -16,13 +15,7 @@ const page = () => {
   if (error) return <div>Error: {error}</div>;
 
   return (
-    <div className="flex flex-col gap-5">
-      <h5 className="flex items-center gap-2">
-        <CalendarTwoTone className="" />
-        주간 시간표
-      </h5>
-      <SpreadsheetTable values={data.values} mergedCells={data.mergedCells} />
-    </div>
+    <SpreadsheetTable values={data.values} mergedCells={data.mergedCells} />
   );
 };
 
@@ -43,6 +36,9 @@ const SpreadsheetTable = ({
   mergedCells: MergeData[];
 }) => {
   const subjectColors = createSubjectColorMapping(values); // Create color mapping
+  const today = new Date().getDay();
+
+  const DAY_LIST = ["", "월", "화", "수", "목", "금", "토", "일"];
 
   const isCellMerged = (row: number, col: number) => {
     return mergedCells.find(
@@ -66,18 +62,39 @@ const SpreadsheetTable = ({
   };
   const columnCount = values[0]?.length || 0;
   return (
-    <table className="text-center border border-gray-200 max-w-[700px]">
+    <table className="text-center w-full max-w-full">
       <colgroup>
         <col style={{ width: `16%` }} />
         {Array.from({ length: columnCount - 1 }, (_, index) => (
           <col key={index} style={{ width: `12%` }} />
         ))}
       </colgroup>
+      <thead>
+        <tr className="[&>th]:py-2 border-b border-gray-100 divide-x divide-gray-100">
+          {DAY_LIST.map((day, index) => (
+            <th key={index}>
+              <div
+                className={`w-fit px-2 mx-auto rounded-full  ${
+                  index % 7 === today
+                    ? "text-blue-500 bg-blue-50"
+                    : "text-gray-500"
+                }`}
+              >
+                {day}
+              </div>
+            </th>
+          ))}
+        </tr>
+      </thead>
       <tbody>
         {values.map((row, rIndex) => {
+          if (rIndex === 0) return;
           const rowIndex = rIndex + 3;
           return (
-            <tr key={rowIndex}>
+            <tr
+              key={rowIndex}
+              // className={`${rIndex === 0 ? "font-bold" : "font-normal"}`}
+            >
               {row.map((cell, cIndex) => {
                 const colIndex = cIndex + 1;
                 const mergedCell = isCellMerged(rowIndex, colIndex);
@@ -95,7 +112,6 @@ const SpreadsheetTable = ({
                   cIndex === 0 || rIndex === 0 || !cell
                     ? "#FFF"
                     : subjectColors[cell || ""] || ""; // Get the color for the subject
-
                 return (
                   <td
                     key={colIndex}
@@ -104,9 +120,11 @@ const SpreadsheetTable = ({
                     style={{
                       height: rowspan * 24,
                     }}
-                    className={`border-gray-200 px-1 py-1 text-[#333] ${
-                      cIndex === 0 ? "text-[11px]" : "text-[12px]"
-                    } ${cell ? "border" : "border-r"}`}
+                    className={`border-gray-100 px-1 py-1 text-[#333] ${
+                      cIndex === 0 ? "text-[11px]" : "text-[12px] font-medium"
+                    } ${cell ? "border" : "border-r"}
+                    ${colIndex === 1 && "!border-l-0"}
+                    ${colIndex === 8 && "!border-r-0"}`}
                   >
                     <div
                       className="rounded-[6px] h-full w-full flex flex-col items-center justify-center"
@@ -156,38 +174,39 @@ const createSubjectColorMapping = (values: string[][]) => {
 
 // 30개
 const colorPalette = [
-  "#ffb3bbaa", // Pastel Pink
-  "#FFE156aa", // Pastel Lemon
-  "#FFDFBAaa", // Pastel Orange
-  "#ffff76aa", // Pastel Yellow
-  "#dbf3a3aa", // Pastel Olive
-  "#BAE1FFaa", // Pastel Blue
-  "#D8B4D0aa", // Pastel Lilac
-  "#FFC3A0aa", // Pastel Coral
-  "#FF9A8Daa", // Pastel Red Coral
-  "#D4A5A5aa", // Pastel Dusty Rose
-  "#9995a6aa", // Pastel Lavender
-  "#FF8C94aa", // Pastel Salmon
-  "#A0CED9aa", // Pastel Teal
-  "#C7CEEAaa", // Pastel Periwinkle
-  "#F5E3B3aa", // Pastel Cream
-  "#C8D7F5aa", // Pastel Sky Blue
-  "#F7B2B7aa", // Pastel Watermelon
-  "#FFDDC1aa", // Pastel Peach
-  "#D3C6E7aa", // Pastel Mauve
-  "#E6B89Caa", // Pastel Tan
-  "#B4C9E7aa", // Pastel Steel Blue
-  "#F7D3B4aa", // Pastel Apricot
-  "#F1A7A1aa", // Pastel Rose
-  "#D1E8E4aa", // Pastel Seafoam
-  "#EAB8D1aa", // Pastel Blush
-  "#FFC9DEaa", // Pastel Flamingo
-  "#B5EAD7aa", // Pastel Mint Green
-  "#FFD6A5aa", // Pastel Light Apricot
-  "#C4E17Faa", // Pastel Light Green
-  "#B3B2D8aa", // Pastel Periwinkle
+  "#ffb3bb", // Pink
+  "#FFE156", // Lemon
+  "#FFDFBA", // Orange
+  "#ffff76", // Yellow
+  "#dbf3a3", // Olive
+  "#BAE1FF", // Blue
+  "#D8B4D0", // Lilac
+  "#FFC3A0", // Coral
+  "#FF9A8D", // Red Coral
+  "#D4A5A5", // Dusty Rose
+  "#9995a6", // Lavender
+  "#FF8C94", // Salmon
+  "#A0CED9", // Teal
+  "#C7CEEA", // Periwinkle
+  "#F5E3B3", // Cream
+  "#C8D7F5", // Sky Blue
+  "#F7B2B7", // Watermelon
+  "#FFDDC1", // Peach
+  "#D3C6E7", // Mauve
+  "#E6B89C", // Tan
+  "#B4C9E7", // Steel Blue
+  "#F7D3B4", // Apricot
+  "#F1A7A1", // Rose
+  "#D1E8E4", // Seafoam
+  "#EAB8D1", // Blush
+  "#FFC9DE", // Flamingo
+  "#B5EAD7", // Mint Green
+  "#FFD6A5", // Light Apricot
+  "#C4E17F", // Light Green
+  "#B3B2D8", // Periwinkle
 ];
 
+const opacity = "60"; // 16진수 (00~FF)
 const generateColor = (index: number): string => {
-  return colorPalette[index % colorPalette.length]; // Cycle through the color palette
+  return `${colorPalette[index % colorPalette.length]}${opacity}`; // Cycle through the color palette
 };
