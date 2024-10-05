@@ -1,5 +1,5 @@
 export const metadata = {
-  title: "로그인 ∙ 거인의발자국",
+  title: "로그인 ∙ 윈터스쿨",
 };
 
 const RootLayout = ({ children }: { children: React.ReactNode }) => {

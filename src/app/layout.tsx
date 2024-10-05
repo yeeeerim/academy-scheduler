@@ -6,8 +6,8 @@ import { Toaster } from "react-hot-toast";
 const inter = Inter({ subsets: ["latin"] });
 
 export const metadata = {
-  title: "메인 ∙ 거인의발자국",
-  description: "거인의발자국",
+  title: "메인 ∙ 윈터스쿨",
+  description: "거인의발자국 윈터스쿨",
   icons: {
     icon: [
       {

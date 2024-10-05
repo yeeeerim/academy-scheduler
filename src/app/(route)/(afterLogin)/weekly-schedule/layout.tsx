@@ -1,5 +1,5 @@
 export const metadata = {
-  title: "주간시간표 ∙ 거인의발자국",
+  title: "주간시간표 ∙ 윈터스쿨",
 };
 
 const RootLayout = ({ children }: { children: React.ReactNode }) => {
