@@ -160,13 +160,27 @@ const SpreadsheetTable = ({
   );
 };
 
-const loadingData = {
-  values: Array.from({ length: 30 }).map((_) =>
-    Array.from({ length: 8 }).map((_, j) =>
-      j === 0 ? "time_loading" : "subject_loading"
+const loadingDataValues = Array.from({ length: 28 }).map((_, i) =>
+  Array.from({ length: 8 }).map((_, j) =>
+    i % 2 === 1 ? (j === 0 ? "time_loading" : "subject_loading") : ""
+  )
+);
+
+const loadingData: {
+  values: string[][];
+  mergedCells: MergeData[];
+} = {
+  values: loadingDataValues,
+  mergedCells: loadingDataValues
+    .map((columns, i) =>
+      columns.map((_, j) => ({
+        startRowIndex: 2 * i + 4,
+        endRowIndex: 2 * i + 6,
+        startColumnIndex: j + 1,
+        endColumnIndex: j + 2,
+      }))
     )
-  ),
-  mergedCells: [],
+    .flat(),
 };
 
 type Colors = { [key: string]: string };
