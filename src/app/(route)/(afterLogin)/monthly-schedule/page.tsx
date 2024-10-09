@@ -40,7 +40,7 @@ const page = () => {
           ]}
         />
       ) : (
-        <div className="w-[184px] h-[32px] bg-[#efefef] rounded-[6px]" />
+        <div className="w-[184px] h-[32px] bg-[#efefef] rounded-[6px] animate-fade" />
       )}
       <div className="text-center grid grid-cols-7 gap-x-1 row-span-5">
         {(isLoading ? loadingData : data)[month]
@@ -75,7 +75,7 @@ const page = () => {
                         return (
                           <div
                             key={index}
-                            className="rounded-full bg-[#efefef] w-[24px] h-[24px] mx-auto"
+                            className="rounded-full bg-[#efefef] w-[24px] h-[24px] mx-auto animate-fade"
                           />
                         );
                       }
@@ -83,7 +83,7 @@ const page = () => {
                         return (
                           <Tag
                             key={index}
-                            className="!m-0 !h-[22px] !border-none"
+                            className="!m-0 !h-[22px] !border-none animate-fade"
                           />
                         );
                       }
