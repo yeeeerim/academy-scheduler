@@ -11,11 +11,14 @@ const page = () => {
     })
   );
 
-  if (isLoading) return <div>Loading...</div>;
   if (error) return <div>Error: {error}</div>;
-
   return (
-    <SpreadsheetTable values={data.values} mergedCells={data.mergedCells} />
+    <SpreadsheetTable
+      {...(isLoading ? loadingData : data)}
+      subjectColors={
+        isLoading ? loadingColors : createSubjectColorMapping(data.values)
+      }
+    />
   );
 };
 
@@ -31,11 +34,12 @@ interface MergeData {
 const SpreadsheetTable = ({
   values,
   mergedCells,
+  subjectColors,
 }: {
   values: string[][];
   mergedCells: MergeData[];
+  subjectColors: Colors;
 }) => {
-  const subjectColors = createSubjectColorMapping(values); // Create color mapping
   const today = new Date().getDay();
 
   const DAY_LIST = ["", "월", "화", "수", "목", "금", "토", "일"];
@@ -107,9 +111,11 @@ const SpreadsheetTable = ({
                   return null;
                 }
 
+                const isLoadingCell =
+                  cell === "time_loading" || cell === "subject_loading";
                 const { rowspan, colspan } = getCellSpan(rowIndex, colIndex);
                 const bgColor =
-                  cIndex === 0 || rIndex === 0 || !cell
+                  (!isLoadingCell && cIndex === 0) || rIndex === 0 || !cell
                     ? "#FFF"
                     : subjectColors[cell || ""] || ""; // Get the color for the subject
                 return (
@@ -132,7 +138,7 @@ const SpreadsheetTable = ({
                         backgroundColor: bgColor,
                       }}
                     >
-                      {cell
+                      {!isLoadingCell && cell
                         ? cell.split("\n").map((line, index) => (
                             <React.Fragment key={index}>
                               {line}
@@ -154,8 +160,24 @@ const SpreadsheetTable = ({
   );
 };
 
+const loadingData = {
+  values: Array.from({ length: 30 }).map((_) =>
+    Array.from({ length: 8 }).map((_, j) =>
+      j === 0 ? "time_loading" : "subject_loading"
+    )
+  ),
+  mergedCells: [],
+};
+
+type Colors = { [key: string]: string };
+
+const loadingColors: Colors = {
+  time_loading: "#e5e5e5",
+  subject_loading: "#efefef",
+};
+
 const createSubjectColorMapping = (values: string[][]) => {
-  const subjectColors: { [key: string]: string } = {};
+  const subjectColors: Colors = {};
   let colorIndex = 0;
 
   values.forEach((row, rIndex) => {
