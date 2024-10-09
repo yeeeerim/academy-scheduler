@@ -5,12 +5,18 @@ import React, { useState } from "react";
 import useSWR from "swr";
 
 const days = ["일", "월", "화", "수", "목", "금", "토"];
+
+enum LoadingType {
+  DAY = "day_loading",
+  SCHEDULE = "schedule_loading",
+}
+
 const loadingData = [
   Array.from({ length: 22 }).map((_, i) =>
     i === 1
       ? days
       : Array.from({ length: 7 }).map(() =>
-          i % 4 === 2 ? "day_loading" : "schedule_loading"
+          i % 4 === 2 ? LoadingType.DAY : LoadingType.SCHEDULE
         )
   ),
 ];
@@ -51,8 +57,6 @@ const page = () => {
               arr.push("");
             }
             return arr.map((cell, cellIndex) => {
-              const isLoadingCell =
-                cell === "day_loading" || cell === "schedule_loading";
               const isText = rowIndex > 0 && cell && !Number(cell);
               const isSunday = cellIndex === 0;
               const isSaturday = cellIndex === 6;
@@ -71,7 +75,7 @@ const page = () => {
                 >
                   {isText ? (
                     cell.split("\n").map((line, index) => {
-                      if (line === "day_loading") {
+                      if (line === LoadingType.DAY) {
                         return (
                           <div
                             key={index}
@@ -79,7 +83,7 @@ const page = () => {
                           />
                         );
                       }
-                      if (line === "schedule_loading") {
+                      if (line === LoadingType.SCHEDULE) {
                         return (
                           <Tag
                             key={index}

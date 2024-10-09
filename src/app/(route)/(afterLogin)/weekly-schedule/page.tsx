@@ -112,7 +112,7 @@ const SpreadsheetTable = ({
                 }
 
                 const isLoadingCell =
-                  cell === "time_loading" || cell === "subject_loading";
+                  cell === LoadingType.TIME || cell === LoadingType.SUBJECT;
                 const { rowspan, colspan } = getCellSpan(rowIndex, colIndex);
                 const bgColor =
                   (!isLoadingCell && cIndex === 0) || rIndex === 0 || !cell
@@ -160,9 +160,14 @@ const SpreadsheetTable = ({
   );
 };
 
+enum LoadingType {
+  TIME = "time_loading",
+  SUBJECT = "subject_loading",
+}
+
 const loadingDataValues = Array.from({ length: 28 }).map((_, i) =>
   Array.from({ length: 8 }).map((_, j) =>
-    i % 2 === 1 ? (j === 0 ? "time_loading" : "subject_loading") : ""
+    i % 2 === 1 ? (j === 0 ? LoadingType.TIME : LoadingType.SUBJECT) : ""
   )
 );
 
