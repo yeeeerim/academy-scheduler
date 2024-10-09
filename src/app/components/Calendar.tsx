@@ -20,11 +20,18 @@ const loadingData = [
   ),
 ];
 
+const tagColorsByText = {
+  출석: "processing",
+  결석: "error",
+  지각: "warning",
+};
+
 export default function Calendar({
   data,
   error,
   isLoading,
-}: SWRResponse<any[], any, any>) {
+  startRowIdx = 0,
+}: SWRResponse<any[], any, any> & { startRowIdx?: number }) {
   const [month, setMonth] = useState(0);
 
   if (error) return <div>Error: {error}</div>;
@@ -47,7 +54,7 @@ export default function Calendar({
         {(isLoading ? loadingData : data)[month]
           .slice(1)
           .map((row: string[], rowIndex: number) => {
-            const arr = row;
+            const arr = row.slice(isLoading ? 0 : startRowIdx);
             while (arr.length < daysLength) {
               arr.push("");
             }
@@ -88,7 +95,7 @@ export default function Calendar({
                       }
                       return (
                         <React.Fragment key={index}>
-                          <Tag className="!m-0">
+                          <Tag className="!m-0" color={tagColorsByText[line]}>
                             <div className="truncate">{line}</div>
                           </Tag>
                         </React.Fragment>
