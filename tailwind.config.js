@@ -15,6 +15,16 @@ module.exports = {
       screens: {
         sm: { max: "480px" },
       },
+      keyframes: {
+        fade: {
+          "0%": { opacity: "1" },
+          "50%": { opacity: "0.5" },
+          "100%": { opacity: "1" },
+        },
+      },
+      animation: {
+        fade: "fade 1.5s infinite ease-in-out",
+      },
     },
   },
   plugins: [],

@@ -133,10 +133,10 @@ const SpreadsheetTable = ({
                     ${colIndex === 8 && "!border-r-0"}`}
                   >
                     <div
-                      className="rounded-[6px] h-full w-full flex flex-col items-center justify-center"
-                      style={{
-                        backgroundColor: bgColor,
-                      }}
+                      className={`rounded-[6px] h-full w-full flex flex-col items-center justify-center ${
+                        isLoadingCell ? "animate-fade" : ""
+                      }`}
+                      style={{ backgroundColor: bgColor }}
                     >
                       {!isLoadingCell && cell
                         ? cell.split("\n").map((line, index) => (
