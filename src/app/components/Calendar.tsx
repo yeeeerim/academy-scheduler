@@ -21,9 +21,12 @@ const loadingData = [
 ];
 
 const tagColorsByText = {
-  출석: "processing",
-  결석: "error",
-  지각: "warning",
+  출석: "blue",
+  결석: "red",
+  지각: "gold",
+  조퇴: "orange",
+  휴강: "cyan",
+  타학원: "purple",
 };
 
 export default function Calendar({

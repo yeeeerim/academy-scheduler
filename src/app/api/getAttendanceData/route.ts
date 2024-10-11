@@ -1,6 +1,9 @@
 import { google } from "googleapis";
 import { NextResponse } from "next/server";
 
+const days = ["일", "월", "화", "수", "목", "금", "토"];
+const daysLength = days.length;
+
 export const fetchCache = "force-no-store";
 export async function GET(request: Request) {
   try {
@@ -15,7 +18,7 @@ export async function GET(request: Request) {
     const sheets = google.sheets({ version: "v4", auth: auth });
 
     const spreadsheetId = "1xwR133yh4OEcx3zfhdRUkzd6Tfy95aX2yIyAhoEs2PE";
-    const ranges = [`출석(1월)!B2:I23`, `출석(2월)!B2:I23`];
+    const ranges = [`출석1!B2`, `출석1!C4:I23`, `출석2!B2`, `출석2!C4:I23`];
 
     const response = await sheets.spreadsheets.values.batchGet({
       spreadsheetId,
@@ -25,7 +28,28 @@ export async function GET(request: Request) {
     // Extract values and merged cell information
     const values = response.data.valueRanges;
 
-    return NextResponse.json({ data: values });
+    return NextResponse.json({
+      title1: values[0].values[0],
+      data1: values[1].values
+        .map((row: string[], i: number) => {
+          const arr = row;
+          while (arr.length < daysLength) {
+            arr.push("");
+          }
+          return arr;
+        })
+        .filter((_, index) => index % 4 !== 3),
+      title2: values[2].values[0],
+      data2: values[3].values
+        .map((row: string[], i: number) => {
+          const arr = row;
+          while (arr.length < daysLength) {
+            arr.push("");
+          }
+          return arr;
+        })
+        .filter((_, index) => index % 4 !== 3),
+    });
   } catch (error) {
     throw new Error("Error fetching data from Google Spreadsheet");
   }
