@@ -2,17 +2,25 @@
 
 import React from "react";
 import useSWR from "swr";
-import Calendar from "@/app/components/Calendar";
+import AttendanceCalendar from "./_component/AttendanceCalendar";
 
 const AttendancePage = () => {
   const res = useSWR("/api/getAttendanceData", () =>
     fetch(`/api/getAttendanceData`).then(async (res) => {
-      const { data } = await res.json();
-      return [data[0].values, data[1].values];
+      const { title1, data1, title2, data2 } = await res.json();
+      const response = [
+        {
+          title: title1,
+          data: data1,
+        },
+        { title: title2, data: data2 },
+      ];
+
+      return response;
     })
   );
 
-  return <Calendar {...res} startRowIdx={1} />;
+  return <AttendanceCalendar {...res} />;
 };
 
 export default AttendancePage;
