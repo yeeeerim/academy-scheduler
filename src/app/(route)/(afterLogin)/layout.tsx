@@ -163,7 +163,7 @@ const RootLayout = ({ children }: { children: React.ReactNode }) => {
         </Sider>
         <Layout className="">
           <Header
-            className="!py-0 !px-5 flex w-full items-center justify-between sm:fixed sm:shadow-[1px_1px_10px_0#eee]"
+            className="!py-0 !px-5 flex w-full items-center justify-between sm:fixed sm:shadow-[1px_1px_10px_0#eee] sm:z-10"
             style={{ background: colorBgContainer }}
           >
             <Button
