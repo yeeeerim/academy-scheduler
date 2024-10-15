@@ -127,7 +127,18 @@ const RootLayout = ({ children }: { children: React.ReactNode }) => {
                 key: "2",
                 icon: <ScheduleOutlined />,
                 label: "출결정보",
-                onClick: () => navigate("/attendance"),
+                children: [
+                  {
+                    key: "1-1",
+                    label: "캘린더",
+                    onClick: () => navigate("/attendance-calendar"),
+                  },
+                  {
+                    key: "1-2",
+                    label: "통계",
+                    onClick: () => navigate("/attendance-statistics"),
+                  },
+                ],
               },
               // {
               //   key: "3",
