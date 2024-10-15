@@ -178,7 +178,7 @@ const RootLayout = ({ children }: { children: React.ReactNode }) => {
             defaultSelectedKeys={[
               map(sidebarInfo, "children")
                 .flat()
-                .find(({ key }) => key === document.location.pathname).key ??
+                .find(({ key }) => key === window.location.pathname)?.key ??
                 "1",
             ]}
             items={sidebarInfo}
