@@ -1,5 +1,6 @@
 "use client";
 
+import { attendanceColorsByText } from "@/consts";
 import { Segmented, Tag, Tooltip } from "antd";
 import React, { useState } from "react";
 import { SWRResponse } from "swr";
@@ -19,15 +20,6 @@ const loadingData = [
     )
   ),
 ];
-
-const tagColorsByText = {
-  출석: "blue",
-  결석: "red",
-  지각: "gold",
-  조퇴: "orange",
-  휴강: "cyan",
-  타학원: "purple",
-};
 
 export default function AttendanceCalendar({
   data,
@@ -111,7 +103,7 @@ export default function AttendanceCalendar({
                       : ""
                   }
                 >
-                  <Tag className="!m-0" color={tagColorsByText[cell]}>
+                  <Tag className="!m-0" color={attendanceColorsByText[cell]}>
                     <div className="truncate">{cell}</div>
                   </Tag>
                 </Tooltip>

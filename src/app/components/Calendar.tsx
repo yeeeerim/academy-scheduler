@@ -1,3 +1,4 @@
+import { attendanceColorsByText } from "@/consts";
 import { Segmented, Tag } from "antd";
 import React, { useState } from "react";
 import { SWRResponse } from "swr";
@@ -19,15 +20,6 @@ const loadingData = [
         )
   ),
 ];
-
-const tagColorsByText = {
-  출석: "blue",
-  결석: "red",
-  지각: "gold",
-  조퇴: "orange",
-  휴강: "cyan",
-  타학원: "purple",
-};
 
 export default function Calendar({
   data,
@@ -98,7 +90,10 @@ export default function Calendar({
                       }
                       return (
                         <React.Fragment key={index}>
-                          <Tag className="!m-0" color={tagColorsByText[line]}>
+                          <Tag
+                            className="!m-0"
+                            color={attendanceColorsByText[line]}
+                          >
                             <div className="truncate">{line}</div>
                           </Tag>
                         </React.Fragment>
