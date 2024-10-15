@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useEffect, useRef, useState } from "react";
+import React, { useEffect, useMemo, useRef, useState } from "react";
 import {
   MenuFoldOutlined,
   MenuUnfoldOutlined,
@@ -13,6 +13,7 @@ import { useRouter } from "next/navigation";
 import { SWRConfig } from "swr";
 import { useMediaQuery } from "react-responsive";
 import toast from "react-hot-toast";
+import { map } from "lodash";
 
 const { Header, Sider, Content } = Layout;
 
@@ -67,6 +68,75 @@ const RootLayout = ({ children }: { children: React.ReactNode }) => {
     router.replace("/login");
   };
 
+  const sidebarInfo = useMemo(
+    () => [
+      {
+        key: "1",
+        icon: <TableOutlined />,
+        label: "시간표",
+        children: [
+          {
+            key: "/weekly-schedule",
+            label: "주간시간표",
+            onClick: () => navigate("/weekly-schedule"),
+          },
+          {
+            key: "/monthly-schedule",
+            label: "월간시간표",
+            onClick: () => navigate("/monthly-schedule"),
+          },
+        ],
+      },
+      {
+        key: "2",
+        icon: <ScheduleOutlined />,
+        label: "출결정보",
+        children: [
+          {
+            key: "/attendance-calendar",
+            label: "캘린더",
+            onClick: () => navigate("/attendance-calendar"),
+          },
+          {
+            key: "/attendance-statistics",
+            label: "통계",
+            onClick: () => navigate("/attendance-statistics"),
+          },
+        ],
+      },
+      // {
+      //   key: "3",
+      //   icon: <EditOutlined />,
+      //   label: "테스트 결과",
+      //   children: [
+      //     {
+      //       key: "3-1",
+      //       label: "국어",
+      //       onClick: () => navigate("/test-results?subject=ko"),
+      //     },
+      //     {
+      //       key: "3-2",
+      //       label: "영어",
+      //       onClick: () => navigate("/test-results?subject=en"),
+      //     },
+      //   ],
+      // },
+      // {
+      //   key: "4",
+      //   icon: <PieChartOutlined />,
+      //   label: "월말평가",
+      //   onClick: () => navigate("/monthly-evaluation"),
+      // },
+      // {
+      //   key: "5",
+      //   icon: <BookOutlined />,
+      //   label: "자습교재 현황",
+      //   onClick: () => navigate("/self-study-materials"),
+      // },
+    ],
+    []
+  );
+
   return (
     <SWRConfig
       value={{
@@ -104,72 +174,13 @@ const RootLayout = ({ children }: { children: React.ReactNode }) => {
           <Menu
             theme="dark"
             mode="inline"
-            defaultSelectedKeys={["1"]}
-            items={[
-              {
-                key: "1",
-                icon: <TableOutlined />,
-                label: "시간표",
-                children: [
-                  {
-                    key: "1-1",
-                    label: "주간시간표",
-                    onClick: () => navigate("/weekly-schedule"),
-                  },
-                  {
-                    key: "1-2",
-                    label: "월간시간표",
-                    onClick: () => navigate("/monthly-schedule"),
-                  },
-                ],
-              },
-              {
-                key: "2",
-                icon: <ScheduleOutlined />,
-                label: "출결정보",
-                children: [
-                  {
-                    key: "1-1",
-                    label: "캘린더",
-                    onClick: () => navigate("/attendance-calendar"),
-                  },
-                  {
-                    key: "1-2",
-                    label: "통계",
-                    onClick: () => navigate("/attendance-statistics"),
-                  },
-                ],
-              },
-              // {
-              //   key: "3",
-              //   icon: <EditOutlined />,
-              //   label: "테스트 결과",
-              //   children: [
-              //     {
-              //       key: "3-1",
-              //       label: "국어",
-              //       onClick: () => navigate("/test-results?subject=ko"),
-              //     },
-              //     {
-              //       key: "3-2",
-              //       label: "영어",
-              //       onClick: () => navigate("/test-results?subject=en"),
-              //     },
-              //   ],
-              // },
-              // {
-              //   key: "4",
-              //   icon: <PieChartOutlined />,
-              //   label: "월말평가",
-              //   onClick: () => navigate("/monthly-evaluation"),
-              // },
-              // {
-              //   key: "5",
-              //   icon: <BookOutlined />,
-              //   label: "자습교재 현황",
-              //   onClick: () => navigate("/self-study-materials"),
-              // },
+            defaultSelectedKeys={[
+              map(sidebarInfo, "children")
+                .flat()
+                .find(({ key }) => key === document.location.pathname).key ??
+                "1",
             ]}
+            items={sidebarInfo}
           />
         </Sider>
         <Layout className="">
