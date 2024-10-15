@@ -14,6 +14,7 @@ import { SWRConfig } from "swr";
 import { useMediaQuery } from "react-responsive";
 import toast from "react-hot-toast";
 import { map } from "lodash";
+import "chart.js/auto";
 
 const { Header, Sider, Content } = Layout;
 
