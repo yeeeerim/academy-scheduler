@@ -9,7 +9,7 @@ import {
   UserOutlined,
 } from "@ant-design/icons";
 import { Avatar, Button, Layout, Menu, Popover, theme } from "antd";
-import { useRouter } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
 import { SWRConfig } from "swr";
 import { useMediaQuery } from "react-responsive";
 import toast from "react-hot-toast";
@@ -28,6 +28,7 @@ const RootLayout = ({ children }: { children: React.ReactNode }) => {
     token: { colorBgContainer },
   } = theme.useToken();
   const router = useRouter();
+  const pathname = usePathname();
   const [open, setOpen] = useState(false);
   const isMount = useRef(false);
   const [username, setUsername] = useState("");
@@ -178,8 +179,7 @@ const RootLayout = ({ children }: { children: React.ReactNode }) => {
             defaultSelectedKeys={[
               map(sidebarInfo, "children")
                 .flat()
-                .find(({ key }) => key === window.location.pathname)?.key ??
-                "1",
+                .find(({ key }) => key === pathname)?.key ?? "1",
             ]}
             items={sidebarInfo}
           />
