@@ -79,7 +79,9 @@ const AttendanceStatisticsPage = () => {
           ]}
         />
       )}
-      {chartDataList ? <PieChart data={chartDataList[month]} /> : undefined}
+      {chartDataList ? (
+        <PieChart id="attendance-statistics" data={chartDataList[month]} />
+      ) : undefined}
     </div>
   );
 };
