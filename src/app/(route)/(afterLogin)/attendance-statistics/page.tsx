@@ -4,7 +4,7 @@ import PieChart from "@/app/components/PieChart";
 import { attendanceColorsByText } from "@/consts";
 import { Segmented, theme } from "antd";
 import { ChartData } from "chart.js";
-import { groupBy } from "lodash";
+import { groupBy, orderBy } from "lodash";
 import React, { useMemo, useState } from "react";
 import useSWR from "swr";
 
@@ -14,7 +14,9 @@ const AttendanceStatisticsPage = () => {
 
   const generateChartData = (data: string[][]) => {
     const dataGroupByText = groupBy(data.filter((_, i) => i % 3 === 1).flat());
-    return Object.entries(dataGroupByText).reduce<ChartData<"pie">>(
+    return orderBy(Object.entries(dataGroupByText), (texts) =>
+      Object.keys(attendanceColorsByText).indexOf(texts[0])
+    ).reduce<ChartData<"pie">>(
       (acc, [k, arr]) => {
         if (k === "") {
           return acc;
