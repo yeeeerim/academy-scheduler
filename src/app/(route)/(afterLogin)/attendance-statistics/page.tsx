@@ -8,6 +8,23 @@ import { groupBy, orderBy } from "lodash";
 import React, { useMemo, useState } from "react";
 import useSWR from "swr";
 
+const getSummaryChartGroup = (text: string) => {
+  switch (text) {
+    case "출석":
+    case "지각":
+    case "조퇴": {
+      return "출석";
+    }
+    case "휴강":
+    case "타학원": {
+      return "기타";
+    }
+    default: {
+      return text;
+    }
+  }
+};
+
 const AttendanceStatisticsPage = () => {
   const [month, setMonth] = useState(0);
   const { token } = theme.useToken();
@@ -29,6 +46,42 @@ const AttendanceStatisticsPage = () => {
               backgroundColor: [
                 ...((acc.datasets[0]?.backgroundColor ?? []) as string[]),
                 token[`${attendanceColorsByText[k]}-4`],
+              ],
+            },
+          ],
+        };
+      },
+      {
+        labels: [],
+        datasets: [{ data: [] }],
+      }
+    );
+  };
+
+  const generateSummaryChartData = (data: string[][]) => {
+    const dataGroupByText = groupBy(
+      data.filter((_, i) => i % 3 === 1).flat(),
+      (text) => getSummaryChartGroup(text)
+    );
+    return orderBy(Object.entries(dataGroupByText), (texts) =>
+      Object.keys(attendanceColorsByText).indexOf(texts[0])
+    ).reduce<ChartData<"pie">>(
+      (acc, [k, arr]) => {
+        if (k === "") {
+          return acc;
+        }
+        return {
+          labels: [...acc.labels, k],
+          datasets: [
+            {
+              data: [...acc.datasets[0]?.data, arr.length],
+              backgroundColor: [
+                ...((acc.datasets[0]?.backgroundColor ?? []) as string[]),
+                k === "기타"
+                  ? attendanceColorsByText[k]
+                  : token[
+                      `${attendanceColorsByText[k]}-${k === "출석" ? "5" : "4"}`
+                    ],
               ],
             },
           ],
@@ -65,6 +118,16 @@ const AttendanceStatisticsPage = () => {
         : undefined,
     [data]
   );
+  const summaryChartDataList = useMemo(
+    () =>
+      data
+        ? [
+            generateSummaryChartData(data[0].data),
+            generateSummaryChartData(data[1].data),
+          ]
+        : undefined,
+    [data]
+  );
 
   return (
     <div className="h-full flex flex-col w-full gap-5">
@@ -85,6 +148,14 @@ const AttendanceStatisticsPage = () => {
         <PieChart
           id="attendance-statistics"
           data={chartDataList[month]}
+          unit="일"
+        />
+      ) : undefined}
+      <div className="h-[16px]" />
+      {summaryChartDataList ? (
+        <PieChart
+          id="attendance-statistics-summary"
+          data={summaryChartDataList[month]}
           unit="일"
         />
       ) : undefined}

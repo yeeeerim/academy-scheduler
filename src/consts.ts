@@ -5,4 +5,5 @@ export const attendanceColorsByText = {
   조퇴: "orange",
   휴강: "cyan",
   타학원: "purple",
+  기타: "grey",
 };
