@@ -90,7 +90,7 @@ export const htmlLegendPlugin = {
       const text = document.createTextNode(
         `${
           item.hidden ? "-" : chart.data?.datasets?.[0]?.data?.[itemIdx] ?? "-"
-        }
+        }${options.unit ?? ""}
           (${item.hidden ? "-" : percentage}%)
         `
       );

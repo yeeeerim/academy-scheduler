@@ -7,7 +7,11 @@ export default function PieChart({
   id,
   data,
   options,
-}: Pick<ChartProps<"pie">, "data" | "options"> & { id: string }) {
+  unit,
+}: Pick<ChartProps<"pie">, "data" | "options"> & {
+  id: string;
+  unit?: string;
+}) {
   return (
     <div>
       <Pie
@@ -20,6 +24,7 @@ export default function PieChart({
               },
               htmlLegend: {
                 containerID: id,
+                unit,
               },
             },
           },
