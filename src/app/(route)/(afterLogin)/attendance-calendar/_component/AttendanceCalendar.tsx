@@ -50,6 +50,7 @@ export default function AttendanceCalendar({
           const isSaturday = index === daysLength - 1;
           return (
             <div
+              key={index}
               className={`h-[30px] flex flex-col gap-1 ${
                 isSunday ? "text-red-500" : isSaturday ? "text-blue-500" : ""
               }`}
@@ -71,6 +72,7 @@ export default function AttendanceCalendar({
             if (!isText)
               return (
                 <div
+                  key={cellIndex}
                   className={`${
                     isSunday
                       ? "text-red-500"
@@ -84,18 +86,21 @@ export default function AttendanceCalendar({
               );
             if (cell === LoadingType.DAY) {
               return (
-                <div className="rounded-full bg-[#efefef] w-[24px] h-[24px] mx-auto animate-fade" />
+                <div
+                  key={cellIndex}
+                  className="rounded-full bg-[#efefef] w-[24px] h-[24px] mx-auto animate-fade"
+                />
               );
             }
             if (cell === LoadingType.SCHEDULE) {
               return (
-                <div className="h-[40px] flex flex-col">
+                <div key={cellIndex} className="h-[40px] flex flex-col">
                   <Tag className="!m-0 !h-[20px] !border-none animate-fade" />
                 </div>
               );
             }
             return (
-              <div className="h-[40px] flex flex-col">
+              <div key={cellIndex} className="h-[40px] flex flex-col">
                 <Tooltip
                   title={
                     rowIndex % 3 === 1

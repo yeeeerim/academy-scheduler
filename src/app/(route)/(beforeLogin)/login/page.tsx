@@ -47,7 +47,7 @@ const LoginPage = () => {
       setCookie("authToken", User.sheetId, {
         expires: now,
       });
-      localStorage.setItem("di_s", User.sheetId);
+
       localStorage.setItem("u_name", User.name);
       router.replace("/");
 

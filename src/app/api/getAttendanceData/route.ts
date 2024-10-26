@@ -1,5 +1,6 @@
 import { google } from "googleapis";
 import { NextResponse } from "next/server";
+import { cookies } from "next/headers";
 
 const days = ["일", "월", "화", "수", "목", "금", "토"];
 const daysLength = days.length;
@@ -17,7 +18,9 @@ export async function GET(request: Request) {
 
     const sheets = google.sheets({ version: "v4", auth: auth });
 
-    const spreadsheetId = "1xwR133yh4OEcx3zfhdRUkzd6Tfy95aX2yIyAhoEs2PE";
+    const cookieStore = cookies();
+    const spreadsheetId = cookieStore.get("authToken")?.value;
+
     const ranges = [`출석1!B2`, `출석1!C4:I23`, `출석2!B2`, `출석2!C4:I23`];
 
     const response = await sheets.spreadsheets.values.batchGet({

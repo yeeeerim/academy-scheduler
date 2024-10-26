@@ -1,5 +1,6 @@
 import { google } from "googleapis";
 import { NextResponse } from "next/server";
+import { cookies } from "next/headers";
 
 export const fetchCache = "force-no-store";
 export async function GET(request: Request) {
@@ -14,7 +15,9 @@ export async function GET(request: Request) {
 
     const sheets = google.sheets({ version: "v4", auth: auth });
 
-    const spreadsheetId = "1xwR133yh4OEcx3zfhdRUkzd6Tfy95aX2yIyAhoEs2PE";
+    const cookieStore = cookies();
+    const spreadsheetId = cookieStore.get("authToken")?.value;
+
     const ranges = [`전체 일정!B4:H25`, `전체 일정!B27:H48`];
 
     const response = await sheets.spreadsheets.get({

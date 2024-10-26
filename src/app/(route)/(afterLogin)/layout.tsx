@@ -152,7 +152,7 @@ const RootLayout = ({ children }: { children: React.ReactNode }) => {
         {!collapsed && isMount.current && (
           <div
             id="dim"
-            className="hidden sm:block sm:w-full sm:h-full sm:bg-[#00000082] sm:z-10 sm:absolute"
+            className="hidden sm:block sm:w-full sm:h-full sm:bg-[#00000082] sm:z-20 sm:absolute"
           />
         )}
         <Sider

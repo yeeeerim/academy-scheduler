@@ -4,8 +4,6 @@ const { google } = require("googleapis");
 const dotenv = require("dotenv");
 dotenv.config();
 
-// const __dirname = require("path").resolve();
-
 async function fetchData() {
   try {
     const SPREADSHEET_ID = "1o5nTdjfNYe_DseZjAYIy24hxJefdQqFy_DGQl7na2iQ";
@@ -65,11 +63,6 @@ async function fetchData() {
   } catch (error) {
     console.error("Failed to fetch and save data:", error);
   }
-}
-
-function extractSheetId(url) {
-  const match = url.match(/\/d\/([a-zA-Z0-9-_]+)/);
-  return match ? match[1] : null;
 }
 
 fetchData();
