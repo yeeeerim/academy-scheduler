@@ -29,8 +29,11 @@ const LoginPage = () => {
   }, [id, form]);
 
   const onFinish: FormProps<FieldType>["onFinish"] = (values) => {
-    const User = userList.find((user) => user.id === values.username);
-
+    const User = userList.find((user) => {
+      if (user.id && user.id === values.username) {
+        return user;
+      }
+    });
     if (!User) {
       toast.error("아이디 혹은 비밀번호가 잘못되었습니다.");
       return;

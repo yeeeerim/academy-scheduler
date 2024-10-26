@@ -11,7 +11,7 @@ async function fetchData() {
     const SPREADSHEET_ID = "1o5nTdjfNYe_DseZjAYIy24hxJefdQqFy_DGQl7na2iQ";
     const RANGES = [
       "학생 관리!C6:C",
-      "학생 관리!G6:G",
+      "학생 관리!N6:N",
       "학생 관리!L6:L",
       "학생 관리!M6:M",
     ];
@@ -25,27 +25,41 @@ async function fetchData() {
     });
 
     const sheets = google.sheets({ version: "v4", auth });
-    const response = await sheets.spreadsheets.values.batchGet({
+
+    // Use batchGet to get both values and rich text
+    const response = await sheets.spreadsheets.get({
       spreadsheetId: SPREADSHEET_ID,
-      ranges: [RANGES],
+      ranges: RANGES,
+      fields: "sheets.data.rowData.values",
     });
 
     // Extract data from each column
-    const nameData = response.data.valueRanges?.[0]?.values || [];
-    const sheetIdData = response.data.valueRanges?.[1]?.values || [];
-    const idData = response.data.valueRanges?.[2]?.values || [];
-    const passwordData = response.data.valueRanges?.[3]?.values || [];
+    const nameData = response.data.sheets[0].data[0].rowData
+      .map((row) => row.values[0]?.formattedValue || null)
+      .filter((value) => value !== null);
+
+    const sheetIdData = response.data.sheets[0].data[1].rowData
+      .map((row) => row.values[0]?.formattedValue || null)
+      .filter((value) => value !== null);
+
+    const idData = response.data.sheets[0].data[2].rowData
+      .map((row) => row.values[0]?.formattedValue || null)
+      .filter((value) => value !== null);
+
+    const passwordData = response.data.sheets[0].data[3].rowData
+      .map((row) => row.values[0]?.formattedValue || null)
+      .filter((value) => value !== null);
 
     // Combine data into JSON structure
     const combinedData = nameData.map((_, index) => ({
-      name: nameData[index][0],
-      sheetId: extractSheetId(sheetIdData[index][0]),
-      id: idData[index][0],
-      password: passwordData[index][0],
+      name: nameData[index],
+      sheetId: sheetIdData[index],
+      id: idData[index],
+      password: passwordData[index],
     }));
 
     // Write the data to a JSON file
-    const filePath = join(__dirname, "src/account", "data.json");
+    const filePath = join("/tmp", "data.json");
     writeFileSync(filePath, JSON.stringify(combinedData, null, 2));
     console.log("Data saved successfully");
   } catch (error) {
