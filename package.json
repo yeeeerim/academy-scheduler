@@ -6,7 +6,8 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "lint": "next lint"
+    "lint": "next lint",
+    "fetch:account": "node fetchAccountData.js"
   },
   "dependencies": {
     "@ant-design/icons": "^5.5.1",
@@ -19,6 +20,7 @@
     "chart.js": "^4.4.4",
     "cookies-next": "^4.2.1",
     "dayjs": "^1.11.13",
+    "dotenv": "^16.4.5",
     "eslint": "8.57.1",
     "eslint-config-next": "14.2.13",
     "google-spreadsheet": "^4.1.4",

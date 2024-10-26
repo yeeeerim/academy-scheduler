@@ -7,17 +7,12 @@ import toast from "react-hot-toast";
 import { useRouter } from "next/navigation";
 import { setCookie } from "cookies-next";
 
+import data from "@/account/data.json";
+
 type FieldType = {
   username?: string;
   password?: string;
   remember?: string;
-};
-
-const User = {
-  id: "123",
-  pw: "123",
-  name: "123",
-  sheet_id: "1xwR133yh4OEcx3zfhdRUkzd6Tfy95aX2yIyAhoEs2PE",
 };
 
 const LoginPage = () => {
@@ -26,22 +21,30 @@ const LoginPage = () => {
   const isMount = useRef<boolean>(false);
   const [form] = Form.useForm();
 
+  const userList = data;
+
   useEffect(() => {
     if (id.length > 0)
       form.setFieldsValue({ username: id, remember: id.length > 0 });
   }, [id, form]);
 
   const onFinish: FormProps<FieldType>["onFinish"] = (values) => {
-    // console.log("Success:", values);
-    if (values.username === User.id && values.password === User.pw) {
+    const User = userList.find((user) => user.id === values.username);
+
+    if (!User) {
+      toast.error("아이디 혹은 비밀번호가 잘못되었습니다.");
+      return;
+    }
+
+    if (values.username === User.id && values.password === User.password) {
       toast.success("로그인 성공");
       const now = new Date();
       now.setTime(now.getTime() + 30 * 60 * 1000); // 30분
 
-      setCookie("authToken", User.sheet_id, {
+      setCookie("authToken", User.sheetId, {
         expires: now,
       });
-      localStorage.setItem("di_s", User.sheet_id);
+      localStorage.setItem("di_s", User.sheetId);
       localStorage.setItem("u_name", User.name);
       router.replace("/");
 
