@@ -7,7 +7,7 @@ import toast from "react-hot-toast";
 import { useRouter } from "next/navigation";
 import { setCookie } from "cookies-next";
 
-import data from "@/account/data.json";
+import data from "../../../../account/data.json";
 
 type FieldType = {
   username?: string;
