@@ -4,7 +4,7 @@
   "private": true,
   "scripts": {
     "dev": "next dev",
-    "build": "next build",
+    "build": "node fetchAccountData.js && next build",
     "start": "next start",
     "lint": "next lint",
     "fetch:account": "node fetchAccountData.js"

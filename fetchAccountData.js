@@ -1,12 +1,10 @@
-import { writeFileSync } from "fs";
-import { join } from "path";
-import path from "path";
-import { google } from "googleapis";
-import dotenv from "dotenv";
-
+const { writeFileSync } = require("fs");
+const { join } = require("path");
+const { google } = require("googleapis");
+const dotenv = require("dotenv");
 dotenv.config();
 
-const __dirname = path.resolve();
+// const __dirname = require("path").resolve();
 
 async function fetchData() {
   try {
@@ -41,7 +39,7 @@ async function fetchData() {
     // Combine data into JSON structure
     const combinedData = nameData.map((_, index) => ({
       name: nameData[index][0],
-      sheetId: sheetIdData[index][0],
+      sheetId: extractSheetId(sheetIdData[index][0]),
       id: idData[index][0],
       password: passwordData[index][0],
     }));
@@ -53,6 +51,11 @@ async function fetchData() {
   } catch (error) {
     console.error("Failed to fetch and save data:", error);
   }
+}
+
+function extractSheetId(url) {
+  const match = url.match(/\/d\/([a-zA-Z0-9-_]+)/);
+  return match ? match[1] : null;
 }
 
 fetchData();
