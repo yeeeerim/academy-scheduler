@@ -18,15 +18,18 @@ type FieldType = {
 const LoginPage = () => {
   const router = useRouter();
   const [id, setId] = useState("");
+  const [pw, setPw] = useState("");
   const isMount = useRef<boolean>(false);
   const [form] = Form.useForm();
 
   const userList = data;
 
   useEffect(() => {
-    if (id.length > 0)
+    if (id.length > 0 && pw.length > 0) {
       form.setFieldsValue({ username: id, remember: id.length > 0 });
-  }, [id, form]);
+      form.setFieldsValue({ password: pw, remember: pw.length > 0 });
+    }
+  }, [id, pw, form]);
 
   const onFinish: FormProps<FieldType>["onFinish"] = (values) => {
     const User = userList.find((user) => {
@@ -54,8 +57,10 @@ const LoginPage = () => {
       // 아이디 정보 저장
       if (values.remember) {
         localStorage.setItem("u_id", User.id);
+        localStorage.setItem("u_pw", User.password);
       } else {
         localStorage.removeItem("u_id");
+        localStorage.removeItem("u_pw");
       }
     } else {
       toast.error("아이디 혹은 비밀번호가 잘못되었습니다.");
@@ -76,7 +81,9 @@ const LoginPage = () => {
   useEffect(() => {
     if (isMount.current) {
       const username = localStorage.getItem("u_id") || "";
+      const password = localStorage.getItem("u_pw") || "";
       setId(username);
+      setPw(password);
     }
   }, [isMount.current]);
 
@@ -91,7 +98,11 @@ const LoginPage = () => {
         style={{ maxWidth: 600 }}
         className="w-full [&_.ant-form-item-explain-error]:text-[11px] [&_.ant-form-item-explain-error]:mt-1"
         layout="vertical"
-        initialValues={{ remember: id.length > 0, username: id }}
+        initialValues={{
+          remember: id.length > 0 && pw.length > 0,
+          username: id,
+          password: pw,
+        }}
         onFinish={onFinish}
         onFinishFailed={onFinishFailed}
         autoComplete="off"
@@ -121,7 +132,7 @@ const LoginPage = () => {
         </Form.Item>
 
         <Form.Item<FieldType> name="remember" valuePropName="checked">
-          <Checkbox>아이디 정보 저장</Checkbox>
+          <Checkbox>로그인 정보 저장</Checkbox>
         </Form.Item>
 
         <Form.Item>
