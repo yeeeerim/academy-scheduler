@@ -65,9 +65,8 @@ const RootLayout = ({ children }: { children: React.ReactNode }) => {
 
   const logout = () => {
     toast.success("로그아웃 되었습니다.");
-    // deleteCookie("authToken");
     document.cookie = "authToken=; Max-Age=0; path=/;";
-    router.replace("/login");
+    window.location.replace("/login");
   };
 
   const sidebarInfo = useMemo(

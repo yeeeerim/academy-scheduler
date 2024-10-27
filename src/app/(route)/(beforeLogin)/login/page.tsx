@@ -74,7 +74,6 @@ const LoginPage = () => {
   };
 
   useEffect(() => {
-    router.refresh();
     isMount.current = true;
   }, []);
 
