@@ -69,6 +69,12 @@ const RootLayout = ({ children }: { children: React.ReactNode }) => {
     window.location.replace("/login");
   };
 
+  const handleClickNav = (url: string) => {
+    navigate(url);
+    setCollapsed(true);
+    scrollTo(0, 0);
+  };
+
   const sidebarInfo = useMemo(
     () => [
       {
@@ -79,12 +85,12 @@ const RootLayout = ({ children }: { children: React.ReactNode }) => {
           {
             key: "/weekly-schedule",
             label: "주간시간표",
-            onClick: () => navigate("/weekly-schedule"),
+            onClick: () => handleClickNav("/weekly-schedule"),
           },
           {
             key: "/monthly-schedule",
             label: "월간시간표",
-            onClick: () => navigate("/monthly-schedule"),
+            onClick: () => handleClickNav("/monthly-schedule"),
           },
         ],
       },
@@ -96,12 +102,12 @@ const RootLayout = ({ children }: { children: React.ReactNode }) => {
           {
             key: "/attendance-calendar",
             label: "캘린더",
-            onClick: () => navigate("/attendance-calendar"),
+            onClick: () => handleClickNav("/attendance-calendar"),
           },
           {
             key: "/attendance-statistics",
             label: "통계",
-            onClick: () => navigate("/attendance-statistics"),
+            onClick: () => handleClickNav("/attendance-statistics"),
           },
         ],
       },
@@ -147,11 +153,11 @@ const RootLayout = ({ children }: { children: React.ReactNode }) => {
         refreshInterval: 1 * 60 * 60 * 1000, // 1시간
       }}
     >
-      <Layout className="!min-h-screen h-max">
+      <Layout className="!min-h-screen h-max relative">
         {!collapsed && isMount.current && (
           <div
             id="dim"
-            className="hidden sm:block sm:w-full sm:h-full sm:bg-[#00000082] sm:z-20 sm:absolute"
+            className="hidden bottom-0 sm:block sm:w-full sm:h-full sm:bg-[#00000082] sm:z-20 sm:absolute"
           />
         )}
         <Sider
