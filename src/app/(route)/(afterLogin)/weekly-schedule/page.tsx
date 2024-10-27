@@ -41,18 +41,9 @@ const SpreadsheetTable = ({
   subjectColors: Colors;
 }) => {
   const today = new Date().getDay();
-
   const DAY_LIST = ["", "월", "화", "수", "목", "금", "토", "일"];
 
-  const isCellMerged = (row: number, col: number) => {
-    return mergedCells.find(
-      (merge) =>
-        row >= merge.startRowIndex &&
-        row < merge.endRowIndex &&
-        col >= merge.startColumnIndex &&
-        col < merge.endColumnIndex
-    );
-  };
+  // Determine whether a cell is merged and get the span details
   const getCellSpan = (row: number, col: number) => {
     const merge = mergedCells.find(
       (m) => m.startRowIndex === row && m.startColumnIndex === col
@@ -62,101 +53,115 @@ const SpreadsheetTable = ({
       const colspan = merge.endColumnIndex - merge.startColumnIndex;
       return { rowspan, colspan };
     }
-    return { rowspan: 1, colspan: 1 }; // Default to 1 if not merged
+    return { rowspan: 1, colspan: 1 };
   };
-  const columnCount = values[0]?.length || 0;
-  return (
-    <table className="text-center w-full max-w-full">
-      <colgroup>
-        <col style={{ width: `16%` }} />
-        {Array.from({ length: columnCount - 1 }, (_, index) => (
-          <col key={index} style={{ width: `12%` }} />
-        ))}
-      </colgroup>
-      <thead>
-        <tr className="[&>th]:py-2 border-b border-gray-100 divide-x divide-gray-100">
-          {DAY_LIST.map((day, index) => (
-            <th key={index}>
-              <div
-                className={`w-fit px-2 mx-auto rounded-full  ${
-                  index % 7 === today
-                    ? "text-blue-500 bg-blue-50"
-                    : "text-gray-500"
-                }`}
-              >
-                {day}
-              </div>
-            </th>
-          ))}
-        </tr>
-      </thead>
-      <tbody>
-        {values.map((row, rIndex) => {
-          if (rIndex === 0) return;
-          const rowIndex = rIndex + 3;
-          return (
-            <tr
-              key={rowIndex}
-              // className={`${rIndex === 0 ? "font-bold" : "font-normal"}`}
-            >
-              {row.map((cell, cIndex) => {
-                const colIndex = cIndex + 1;
-                const mergedCell = isCellMerged(rowIndex, colIndex);
-                if (
-                  mergedCell &&
-                  (mergedCell.startRowIndex !== rowIndex ||
-                    mergedCell.startColumnIndex !== colIndex)
-                ) {
-                  // Skip rendering if this cell is part of a merged range
-                  return null;
-                }
 
-                const isLoadingCell =
-                  cell === LoadingType.TIME || cell === LoadingType.SUBJECT;
-                const { rowspan, colspan } = getCellSpan(rowIndex, colIndex);
-                const bgColor =
-                  (!isLoadingCell && cIndex === 0) || rIndex === 0 || !cell
-                    ? "#FFF"
-                    : subjectColors[cell || ""] || ""; // Get the color for the subject
-                return (
-                  <td
-                    key={colIndex}
-                    rowSpan={rowspan}
-                    colSpan={colspan}
-                    style={{
-                      height: rowspan * 24,
-                    }}
-                    className={`border-gray-100 px-1 py-1 text-[#333] ${
-                      cIndex === 0 ? "text-[11px]" : "text-[12px] font-medium"
-                    } ${cell ? "border" : "border-r"}
-                    ${colIndex === 1 && "!border-l-0"}
-                    ${colIndex === 8 && "!border-r-0"}`}
-                  >
-                    <div
-                      className={`rounded-[6px] h-full w-full flex flex-col items-center justify-center ${
-                        isLoadingCell ? "animate-fade" : ""
-                      }`}
-                      style={{ backgroundColor: bgColor }}
-                    >
-                      {!isLoadingCell && cell
-                        ? cell.split("\n").map((line, index) => (
-                            <React.Fragment key={index}>
-                              {line}
-                              {index < row.length - 1 && <br />}{" "}
-                              {/* Insert <br /> for line breaks */}
-                            </React.Fragment>
-                          ))
-                        : ""}
-                      {/* Display empty string if cell is undefined */}
-                    </div>
-                  </td>
-                );
-              })}
-            </tr>
-          );
+  const columnCount = values[0]?.length || 0;
+
+  return (
+    <div className="w-full border-gray-100 divide-y divide-gray-100 max-w-[800px]">
+      {/* Header for days of the week */}
+      <div
+        className="grid w-full"
+        style={{
+          gridTemplateColumns: `repeat(${columnCount}, 1fr)`,
+        }}
+      >
+        {DAY_LIST.map((day, index) => (
+          <div
+            key={index}
+            className="text-center py-2 border-r border-gray-100"
+          >
+            <div
+              className={`w-fit px-2 mx-auto rounded-full ${
+                index % 7 === today
+                  ? "text-blue-500 bg-blue-50"
+                  : "text-gray-500"
+              }`}
+            >
+              {day}
+            </div>
+          </div>
+        ))}
+      </div>
+
+      {/* Grid for table values */}
+      <div
+        className="grid w-full"
+        style={{
+          gridTemplateColumns: `repeat(${columnCount}, 1fr)`,
+          gridAutoRows: "24px", // Default row height
+        }}
+      >
+        {values.map((row, rIndex) => {
+          if (rIndex === 0) return null; // Skip header row if needed
+          const rowIndex = rIndex + 3;
+
+          return row.map((cell, cIndex) => {
+            const colIndex = cIndex + 1;
+            const { rowspan, colspan } = getCellSpan(rowIndex, colIndex);
+            const mergedCell = mergedCells.find(
+              (m) =>
+                rowIndex >= m.startRowIndex &&
+                rowIndex < m.endRowIndex &&
+                colIndex >= m.startColumnIndex &&
+                colIndex < m.endColumnIndex
+            );
+
+            if (
+              mergedCell &&
+              (mergedCell.startRowIndex !== rowIndex ||
+                mergedCell.startColumnIndex !== colIndex)
+            ) {
+              // Skip overlapping cells within a merged range
+              return null;
+            }
+            const isLoadingCell =
+              cell === LoadingType.TIME || cell === LoadingType.SUBJECT;
+
+            const isNotDataCell =
+              (!isLoadingCell && cIndex === 0) || rIndex === 0 || !cell;
+            const bgColor = isNotDataCell
+              ? "#FFF"
+              : subjectColors[cell || ""] || ""; // Get the color for the subject
+
+            // Check if the cell above is empty for border styling
+
+            return (
+              <div
+                key={`${rowIndex}-${colIndex}`}
+                style={{
+                  gridRow: `span ${rowspan}`,
+                  gridColumn: `span ${colspan}`,
+                }}
+                className={`border-r border-gray-100 ${
+                  cell ? "border-b" : ""
+                } ${cIndex === 0 ? "text-[10px]" : "text-[11px] font-medium"}
+                ${!isNotDataCell ? "p-1" : ""}
+                `}
+              >
+                <div
+                  className={`text-[#333] p-1 rounded-[6px] w-full h-full flex items-center justify-center text-center
+                  ${isLoadingCell ? "animate-fade" : ""}`}
+                  style={{
+                    backgroundColor: bgColor,
+                  }}
+                >
+                  {!isLoadingCell &&
+                    cell &&
+                    cell.split("\n").map((line, index) => (
+                      <React.Fragment key={index}>
+                        {line}
+                        {index < row.length - 1 && <br />}
+                      </React.Fragment>
+                    ))}
+                </div>
+              </div>
+            );
+          });
         })}
-      </tbody>
-    </table>
+      </div>
+    </div>
   );
 };
 

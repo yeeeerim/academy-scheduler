@@ -71,7 +71,7 @@ const RootLayout = ({ children }: { children: React.ReactNode }) => {
 
   const handleClickNav = (url: string) => {
     navigate(url);
-    setCollapsed(true);
+
     scrollTo(0, 0);
   };
 

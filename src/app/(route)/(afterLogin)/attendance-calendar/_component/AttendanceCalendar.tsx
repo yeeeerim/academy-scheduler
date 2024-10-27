@@ -32,10 +32,10 @@ export default function AttendanceCalendar({
   return (
     <div className="h-full flex flex-col w-full gap-5">
       {isLoading ? (
-        <div className="w-[184px] h-[32px] bg-[#efefef] rounded-[6px] animate-fade" />
+        <div className="w-[184px] h-[32px] bg-[#efefef] rounded-[6px] animate-fade sm:ml-[10px]" />
       ) : (
         <Segmented
-          className="w-fit"
+          className="w-fit sm:!ml-[10px]"
           value={month}
           onChange={(v) => setMonth(v)}
           options={[
@@ -44,7 +44,7 @@ export default function AttendanceCalendar({
           ]}
         />
       )}
-      <div className="text-center grid grid-cols-7 gap-x-1 row-span-5 gap-y-2">
+      <div className="text-center grid grid-cols-7 gap-x-1 row-span-5 gap-y-2 max-w-[500px] p-6 rounded-[10px] border border-gray-100 sm:p-0 sm:border-none">
         {days.map((d, index) => {
           const isSunday = index === 0;
           const isSaturday = index === daysLength - 1;
@@ -94,13 +94,13 @@ export default function AttendanceCalendar({
             }
             if (cell === LoadingType.SCHEDULE) {
               return (
-                <div key={cellIndex} className="h-[40px] flex flex-col">
-                  <Tag className="!m-0 !h-[20px] !border-none animate-fade" />
+                <div key={cellIndex} className="h-[45px] flex flex-col">
+                  <Tag className="!m-0 !h-[20px] !border-none !animate-fade" />
                 </div>
               );
             }
             return (
-              <div key={cellIndex} className="h-[40px] flex flex-col">
+              <div key={cellIndex} className="h-[45px] flex flex-col">
                 <Tooltip
                   title={
                     rowIndex % 3 === 1

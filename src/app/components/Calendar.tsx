@@ -33,10 +33,10 @@ export default function Calendar({
   return (
     <div className="h-full flex flex-col w-full gap-5">
       {isLoading ? (
-        <div className="w-[184px] h-[32px] bg-[#efefef] rounded-[6px] animate-fade" />
+        <div className="w-[184px] h-[32px] bg-[#efefef] rounded-[6px] animate-fade sm:ml-[10px]" />
       ) : (
         <Segmented
-          className="w-fit"
+          className="w-fit sm:!ml-[10px]"
           value={month}
           onChange={(v) => setMonth(v)}
           options={[
@@ -45,7 +45,7 @@ export default function Calendar({
           ]}
         />
       )}
-      <div className="text-center grid grid-cols-7 gap-x-1 row-span-5">
+      <div className="text-center grid grid-cols-7 gap-x-1 row-span-5 max-w-[800px] p-6 rounded-[10px] border border-gray-100 sm:p-0 sm:border-none">
         {(isLoading ? loadingData : data)[month]
           .slice(1)
           .map((row: string[], rowIndex: number) => {
@@ -84,7 +84,7 @@ export default function Calendar({
                         return (
                           <Tag
                             key={index}
-                            className="!m-0 !h-[22px] !border-none animate-fade"
+                            className="!m-0 !h-[22px] !border-none !animate-fade"
                           />
                         );
                       }
