@@ -3,6 +3,7 @@ import type { NextRequest } from "next/server";
 
 export function middleware(req: NextRequest) {
   const { pathname } = req.nextUrl; // Get the current request path
+  console.log("🚀 ~ middleware ~ pathname:", pathname);
 
   // Skip middleware for the /login route
   if (pathname === "/login") {
@@ -11,9 +12,11 @@ export function middleware(req: NextRequest) {
 
   // Check for the auth token in cookies
   const token = req.cookies.get("authToken");
+  console.log("🚀 ~ middleware ~ token:", token);
 
   // Redirect to /login if the token is not found
   if (!token) {
+    console.log("🚀 ~ middleware ~ token:", token);
     return NextResponse.redirect(new URL("/login", req.url));
   }
 
@@ -27,5 +30,11 @@ export function middleware(req: NextRequest) {
 
 // Apply middleware to all routes
 export const config = {
-  matcher: ["/", "/attendance", "/weekly-schedule", "/monthly-schedule"], // Match all routes, including dynamic ones
+  matcher: [
+    "/",
+    "/attendance-calendar",
+    "/attendance-statistics",
+    "/weekly-schedule",
+    "/monthly-schedule",
+  ],
 };
