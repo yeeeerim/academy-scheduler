@@ -13,7 +13,7 @@ export default function PieChart({
   unit?: string;
 }) {
   return (
-    <div>
+    <div className="w-[40%]">
       <Pie
         data={data}
         options={merge(
@@ -32,7 +32,7 @@ export default function PieChart({
         )}
         plugins={[htmlLegendPlugin]}
       />
-      <div id={id} className="flex items-center justify-center" />
+      <div id={id} className="flex items-center justify-center text-[10px]" />
     </div>
   );
 }

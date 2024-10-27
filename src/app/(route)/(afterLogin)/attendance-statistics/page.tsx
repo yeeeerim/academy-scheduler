@@ -144,21 +144,23 @@ const AttendanceStatisticsPage = () => {
           ]}
         />
       )}
-      {chartDataList ? (
-        <PieChart
-          id="attendance-statistics"
-          data={chartDataList[month]}
-          unit="일"
-        />
-      ) : undefined}
-      <div className="h-[16px]" />
-      {summaryChartDataList ? (
-        <PieChart
-          id="attendance-statistics-summary"
-          data={summaryChartDataList[month]}
-          unit="일"
-        />
-      ) : undefined}
+      <div className="flex w-full items-start justify-around max-w-[700px] [&_p]:!text-[11px]">
+        {chartDataList ? (
+          <PieChart
+            id="attendance-statistics"
+            data={chartDataList[month]}
+            unit="일"
+          />
+        ) : undefined}
+        {/* <div className="h-[16px]" /> */}
+        {summaryChartDataList ? (
+          <PieChart
+            id="attendance-statistics-summary"
+            data={summaryChartDataList[month]}
+            unit="일"
+          />
+        ) : undefined}
+      </div>
     </div>
   );
 };
