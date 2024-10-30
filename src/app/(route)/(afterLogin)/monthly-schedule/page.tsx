@@ -1,7 +1,7 @@
 "use client";
 
 import Calendar from "@/app/components/Calendar";
-import React, { useState } from "react";
+import React from "react";
 import useSWR from "swr";
 
 const page = () => {

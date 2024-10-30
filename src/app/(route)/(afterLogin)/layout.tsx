@@ -2,6 +2,7 @@
 
 import React, { useEffect, useMemo, useRef, useState } from "react";
 import {
+  BookOutlined,
   MenuFoldOutlined,
   MenuUnfoldOutlined,
   ScheduleOutlined,
@@ -71,7 +72,6 @@ const RootLayout = ({ children }: { children: React.ReactNode }) => {
 
   const handleClickNav = (url: string) => {
     navigate(url);
-
     scrollTo(0, 0);
   };
 
@@ -134,12 +134,13 @@ const RootLayout = ({ children }: { children: React.ReactNode }) => {
       //   label: "월말평가",
       //   onClick: () => navigate("/monthly-evaluation"),
       // },
-      // {
-      //   key: "5",
-      //   icon: <BookOutlined />,
-      //   label: "자습교재 현황",
-      //   onClick: () => navigate("/self-study-materials"),
-      // },
+      {
+        key: "/self-study",
+        icon: <BookOutlined />,
+        label: "자습교재 현황 (준비중)",
+        disabled: true,
+        onClick: () => handleClickNav("/self-study"),
+      },
     ],
     []
   );
@@ -181,11 +182,7 @@ const RootLayout = ({ children }: { children: React.ReactNode }) => {
           <Menu
             theme="dark"
             mode="inline"
-            defaultSelectedKeys={[
-              map(sidebarInfo, "children")
-                .flat()
-                .find(({ key }) => key === pathname)?.key ?? "1",
-            ]}
+            defaultSelectedKeys={[pathname || "1"]}
             items={sidebarInfo}
           />
         </Sider>

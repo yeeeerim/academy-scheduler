@@ -32,21 +32,13 @@ export async function GET(request: Request) {
         (row) => row.values?.map((cell) => cell.formattedValue || "") || []
       ) || [];
 
-    const mergedCells = response.data.sheets?.[0].merges || []; // Get merged cells
-
     // Extract values and merged cell information
     const values2 =
       response.data.sheets?.[0].data?.[1].rowData?.map(
         (row) => row.values?.map((cell) => cell.formattedValue || "") || []
       ) || [];
 
-    // const mergedCells2 = response.data.sheets?.[1].merges || []; // Get merged cells
-
-    return NextResponse.json({ data: values, data2: values2, mergedCells });
-
-    // const [value1, value2, ...rest] = response.data.valueRanges;
-
-    // return NextResponse.json({ data: [value1, value2] });
+    return NextResponse.json({ data: values, data2: values2 });
   } catch (error) {
     throw new Error("Error fetching data from Google Spreadsheet");
   }

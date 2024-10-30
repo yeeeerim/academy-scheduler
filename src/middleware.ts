@@ -33,5 +33,6 @@ export const config = {
     "/attendance-statistics",
     "/weekly-schedule",
     "/monthly-schedule",
+    "/self-study",
   ],
 };
