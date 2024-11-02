@@ -22,7 +22,7 @@ const LoginPage = () => {
   const isMount = useRef<boolean>(false);
   const [form] = Form.useForm();
 
-  const userList = data;
+  const userList: { name: string; sheetId?: string; password: string; id: string }[] = data;
 
   useEffect(() => {
     if (id.length > 0 && pw.length > 0) {
@@ -33,7 +33,7 @@ const LoginPage = () => {
 
   const onFinish: FormProps<FieldType>["onFinish"] = (values) => {
     const User = userList.find((user) => {
-      if (user.id && user.id === values.username) {
+      if (user?.id && user.id === values.username) {
         return user;
       }
     });
@@ -67,9 +67,7 @@ const LoginPage = () => {
     }
   };
 
-  const onFinishFailed: FormProps<FieldType>["onFinishFailed"] = (
-    errorInfo
-  ) => {
+  const onFinishFailed: FormProps<FieldType>["onFinishFailed"] = (errorInfo) => {
     console.log("Failed:", errorInfo);
   };
 
@@ -106,28 +104,12 @@ const LoginPage = () => {
         onFinishFailed={onFinishFailed}
         autoComplete="off"
       >
-        <Form.Item<FieldType>
-          label="아이디"
-          name="username"
-          rules={[{ required: true, message: "아이디를 입력해주세요." }]}
-        >
-          <Input
-            placeholder="아이디 입력"
-            size="large"
-            className="!rounded-none"
-          />
+        <Form.Item<FieldType> label="아이디" name="username" rules={[{ required: true, message: "아이디를 입력해주세요." }]}>
+          <Input placeholder="아이디 입력" size="large" className="!rounded-none" />
         </Form.Item>
 
-        <Form.Item<FieldType>
-          label="비밀번호"
-          name="password"
-          rules={[{ required: true, message: "비밀번호를 입력해주세요." }]}
-        >
-          <Input.Password
-            placeholder="비밀번호 입력 (8자리)"
-            size="large"
-            className="!rounded-none"
-          />
+        <Form.Item<FieldType> label="비밀번호" name="password" rules={[{ required: true, message: "비밀번호를 입력해주세요." }]}>
+          <Input.Password placeholder="비밀번호 입력 (8자리)" size="large" className="!rounded-none" />
         </Form.Item>
 
         <Form.Item<FieldType> name="remember" valuePropName="checked">
@@ -135,12 +117,7 @@ const LoginPage = () => {
         </Form.Item>
 
         <Form.Item>
-          <Button
-            size="large"
-            className="w-full"
-            type="primary"
-            htmlType="submit"
-          >
+          <Button size="large" className="w-full" type="primary" htmlType="submit">
             로그인
           </Button>
         </Form.Item>

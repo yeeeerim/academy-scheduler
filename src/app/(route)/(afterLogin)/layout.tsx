@@ -4,6 +4,7 @@ import React, { useEffect, useMemo, useRef, useState } from "react";
 import {
   BookOutlined,
   MenuFoldOutlined,
+  SettingOutlined,
   MenuUnfoldOutlined,
   ScheduleOutlined,
   TableOutlined,
@@ -134,15 +135,25 @@ const RootLayout = ({ children }: { children: React.ReactNode }) => {
       //   label: "월말평가",
       //   onClick: () => navigate("/monthly-evaluation"),
       // },
-      {
-        key: "/self-study",
-        icon: <BookOutlined />,
-        label: "자습교재 현황 (준비중)",
-        disabled: true,
-        onClick: () => handleClickNav("/self-study"),
-      },
+      // {
+      //   key: "/self-study",
+      //   icon: <BookOutlined />,
+      //   label: "자습교재 현황 (준비중)",
+      //   disabled: true,
+      //   onClick: () => handleClickNav("/self-study"),
+      // },
+      ...(username === "관리자"
+        ? [
+            {
+              key: "6",
+              icon: <SettingOutlined />,
+              label: "학생 관리",
+              onClick: () => handleClickNav("/management"),
+            },
+          ]
+        : []),
     ],
-    []
+    [username]
   );
 
   return (

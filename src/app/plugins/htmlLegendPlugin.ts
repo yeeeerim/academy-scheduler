@@ -48,10 +48,7 @@ export const htmlLegendPlugin = {
           // Pie and doughnut charts only have a single dataset and visibility is per item
           chart.toggleDataVisibility(item.index);
         } else {
-          chart.setDatasetVisibility(
-            item.datasetIndex,
-            !chart.isDatasetVisible(item.datasetIndex)
-          );
+          chart.setDatasetVisibility(item.datasetIndex, !chart.isDatasetVisible(item.datasetIndex));
         }
         chart.update();
       };
@@ -61,10 +58,11 @@ export const htmlLegendPlugin = {
       boxSpan.style.background = item.fillStyle;
       boxSpan.style.borderColor = item.strokeStyle;
       boxSpan.style.borderWidth = item.lineWidth + "px";
+      boxSpan.style.borderRadius = "6px";
       boxSpan.style.display = "inline-block";
       boxSpan.style.flexShrink = "0";
       boxSpan.style.height = "20px";
-      boxSpan.style.marginRight = "10px";
+      boxSpan.style.marginRight = "5px";
       boxSpan.style.width = "20px";
 
       // Text
@@ -88,9 +86,7 @@ export const htmlLegendPlugin = {
       const data = chart.data?.datasets?.[0]?.data?.[itemIdx];
       const percentage = total ? Math.round((data / total) * 100) : "-";
       const text = document.createTextNode(
-        `${
-          item.hidden ? "-" : chart.data?.datasets?.[0]?.data?.[itemIdx] ?? "-"
-        }${options.unit ?? ""}
+        `${item.hidden ? "-" : chart.data?.datasets?.[0]?.data?.[itemIdx] ?? "-"}${options.unit ?? ""}
           (${item.hidden ? "-" : percentage}%)
         `
       );
