@@ -1,0 +1,52 @@
+import { google } from "googleapis";
+import { NextResponse } from "next/server";
+import { ACCOUNT_SHEET_ID } from "@/app/constants/spreadsheet";
+
+export async function GET(request: Request) {
+  try {
+    const auth = new google.auth.GoogleAuth({
+      credentials: {
+        client_email: process.env.GOOGLE_CLIENT_EMAIL,
+        private_key: process.env.GOOGLE_PRIVATE_KEY?.replace(/\\n/g, "\n"),
+      },
+      scopes: ["https://www.googleapis.com/auth/spreadsheets.readonly"],
+    });
+    const sheets = google.sheets({ version: "v4", auth: auth });
+    const spreadsheetId = ACCOUNT_SHEET_ID;
+
+    const ranges = [
+      "사이트 정보!C6:C", // 이름
+      "사이트 정보!F6:F", // 스프레드시트 ID
+      "사이트 정보!D6:D", // 아이디
+    ];
+
+    const res = await sheets.spreadsheets.get({
+      spreadsheetId,
+      ranges,
+      fields: "sheets.data.rowData.values",
+    });
+
+    const nameData = res.data.sheets[0].data[0].rowData
+      .map((row) => row.values[0]?.formattedValue || null)
+      .filter((value) => value !== null);
+
+    const sheetIdData = res.data.sheets[0].data[1].rowData
+      .map((row) => row.values[0]?.formattedValue || null)
+      .filter((value) => value !== null);
+
+    const idData = res.data.sheets[0].data[2].rowData
+      .map((row) => row.values[0]?.formattedValue || null)
+      .filter((value) => value !== null);
+
+    const combinedData = nameData.map((_, index) => ({
+      name: nameData[index],
+      sheetId: sheetIdData[index],
+      id: idData[index],
+    }));
+
+    return NextResponse.json(combinedData);
+  } catch (error) {
+    console.error(error);
+  }
+}
+export const revalidate = 0;
