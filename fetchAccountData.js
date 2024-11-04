@@ -2,12 +2,12 @@ const { writeFileSync } = require("fs");
 const { join } = require("path");
 const { google } = require("googleapis");
 const dotenv = require("dotenv");
-const { ACCOUNT_SHEET_ID } = require("./src/app/constants/spreadsheet");
+
 dotenv.config();
 
 async function fetchData() {
   try {
-    const SPREADSHEET_ID = ACCOUNT_SHEET_ID;
+    const SPREADSHEET_ID = process.env.NEXT_PUBLIC_ACCOUNT_SHEET_ID;
     const RANGES = [
       "사이트 정보!C6:C", // 이름
       "사이트 정보!F6:F", // 스프레드시트 ID
@@ -33,21 +33,13 @@ async function fetchData() {
     });
 
     // Extract data from each column
-    const nameData = response.data.sheets[0].data[0].rowData
-      .map((row) => row.values[0]?.formattedValue || null)
-      .filter((value) => value !== null);
+    const nameData = response.data.sheets[0].data[0].rowData.map((row) => row.values[0]?.formattedValue || null).filter((value) => value !== null);
 
-    const sheetIdData = response.data.sheets[0].data[1].rowData
-      .map((row) => row.values[0]?.formattedValue || null)
-      .filter((value) => value !== null);
+    const sheetIdData = response.data.sheets[0].data[1].rowData.map((row) => row.values[0]?.formattedValue || null).filter((value) => value !== null);
 
-    const idData = response.data.sheets[0].data[2].rowData
-      .map((row) => row.values[0]?.formattedValue || null)
-      .filter((value) => value !== null);
+    const idData = response.data.sheets[0].data[2].rowData.map((row) => row.values[0]?.formattedValue || null).filter((value) => value !== null);
 
-    const passwordData = response.data.sheets[0].data[3].rowData
-      .map((row) => row.values[0]?.formattedValue || null)
-      .filter((value) => value !== null);
+    const passwordData = response.data.sheets[0].data[3].rowData.map((row) => row.values[0]?.formattedValue || null).filter((value) => value !== null);
 
     // Combine data into JSON structure
     const combinedData = nameData.map((_, index) => ({
