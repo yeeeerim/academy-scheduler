@@ -8,7 +8,7 @@ import useSWR from "swr";
 const page = () => {
   const [loading, setLoading] = useState<boolean>(false);
 
-  const { data: accountInfo } = useSWR("/api/getAccountInfo", () => {
+  const { data: accountInfo, isLoading } = useSWR("/api/getAccountInfo", () => {
     return fetch("/api/getAccountInfo").then((res) => res.json());
   });
 
@@ -51,12 +51,7 @@ const page = () => {
       filterSearch: true,
       onFilter: (value, record) => record.password === value,
       dataIndex: "password",
-      render: (_, { password }) =>
-        !!password ? (
-          <Tag color="processing">설정완료</Tag>
-        ) : (
-          <Tag color="error">미설정</Tag>
-        ),
+      render: (_, { password }) => (!!password ? <Tag color="processing">설정완료</Tag> : <Tag color="error">미설정</Tag>),
     },
     {
       title: "시트",
@@ -75,37 +70,17 @@ const page = () => {
     },
   ];
 
-  const data: DataType[] = [
-    {
-      key: "1",
-      name: "John Brown",
-      id: "1234",
-      password: true,
-      sheet_id: "1234",
-    },
-    {
-      key: "2",
-      name: "Jim Green",
-      id: "1234",
-      password: true,
-      sheet_id: "1234",
-    },
-    {
-      key: "3",
-      name: "Joe Black",
-      id: "1234",
-      password: false,
-      sheet_id: "1234",
-    },
-  ];
+  const data: DataType[] = accountInfo
+    ? accountInfo.map((item) => ({
+        key: item.id,
+        name: item.name,
+        id: item.id,
+        password: item.password,
+        sheet_id: item.sheet_id,
+      }))
+    : [];
 
-  return (
-    <Table<DataType>
-      size="small"
-      columns={columns.map((item) => ({ ...item, align: "center" }))}
-      dataSource={data}
-    />
-  );
+  return <Table<DataType> size="small" columns={columns.map((item) => ({ ...item, align: "center" }))} dataSource={data} />;
 };
 
 export default page;
