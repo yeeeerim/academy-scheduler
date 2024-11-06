@@ -38,7 +38,7 @@ export async function GET(request: Request) {
       name: nameData[index],
       sheetId: sheetIdData[index],
       id: idData[index],
-      password: passwordData[index] && passwordData[index].length > 0 ? true : false,
+      password: passwordData[index],
     }));
 
     return NextResponse.json(combinedData);

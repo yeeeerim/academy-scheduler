@@ -79,14 +79,17 @@ const page = () => {
   ];
 
   const data: DataType[] = accountInfo
-    ? accountInfo.map((item) => ({
-        key: item.id,
-        name: item.name,
-        id: item.id,
-        password: item.password,
-        sheet_id: item.sheet_id,
-        isFetched: userList.find((user) => user.id === item.id),
-      }))
+    ? accountInfo.map((item) => {
+        const user = userList.find((user) => user.name === item.name);
+        return {
+          key: item.id,
+          name: item.name,
+          id: item.id,
+          password: item.password,
+          sheet_id: item.sheet_id,
+          isFetched: user?.id === item.id && user?.password === item.password && user?.sheetId === item.sheetId,
+        };
+      })
     : [];
 
   return <Table<DataType> loading={isLoading} size="small" columns={columns.map((item) => ({ ...item, align: "center" }))} dataSource={data} />;
