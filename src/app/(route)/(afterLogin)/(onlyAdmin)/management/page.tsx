@@ -110,17 +110,20 @@ const page = () => {
 
   const data: DataType[] = accountInfo
     ? accountInfo.map((item) => {
-        const user = userList.find((user) => user.name === item.name);
+        const user = userList.find((user) => {
+          return user.name === item.name;
+        });
         return {
           key: item.id,
           name: item.name,
           id: item.id,
           password: item.password,
           sheetId: item.sheetId,
-          isFetched:
-            user?.id === item.id &&
-            user?.password === item.password &&
-            user?.sheetId === item.sheetId,
+          isFetched: !user
+            ? false
+            : user?.id === item.id &&
+              user?.password === item.password &&
+              user?.sheetId === item.sheetId,
         };
       })
     : [];
