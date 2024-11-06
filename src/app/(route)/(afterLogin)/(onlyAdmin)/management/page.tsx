@@ -72,14 +72,17 @@ const page = () => {
       title: "시트",
       dataIndex: "sheetId",
       key: "sheetId",
-      render: (text) => (
-        <a
-          href={`https://docs.google.com/spreadsheets/d/${text}`}
-          target="_blank"
-        >
-          {"열기"}
-        </a>
-      ),
+      render: (text) => {
+        if (!text) return "-";
+        return (
+          <a
+            href={`https://docs.google.com/spreadsheets/d/${text}`}
+            target="_blank"
+          >
+            {"열기"}
+          </a>
+        );
+      },
     },
     {
       title: "",
@@ -88,6 +91,9 @@ const page = () => {
         <Button
           className="!text-[12px]"
           size="small"
+          disabled={
+            !record.name || !record.id || !record.password || !record.sheetId
+          }
           onClick={() => {
             const now = new Date();
             now.setTime(now.getTime() + 30 * 60 * 1000); // 30분
