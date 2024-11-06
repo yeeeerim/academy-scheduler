@@ -1,19 +1,21 @@
 "use client";
 
-import React, { useState } from "react";
-import { Button, Space, Table, Tag, Tooltip } from "antd";
+import React from "react";
+import { Button, Table, Tag, Tooltip } from "antd";
 import type { TableProps } from "antd";
 import useSWR from "swr";
 
 import userList from "/tmp/data.json";
 import { ExclamationCircleTwoTone } from "@ant-design/icons";
+import { setCookie } from "cookies-next";
+import toast from "react-hot-toast";
 
 interface DataType {
   key: string;
   name: string;
   id: string;
   password: boolean;
-  sheet_id: string;
+  sheetId: string;
   isFetched: boolean;
 }
 
@@ -68,15 +70,38 @@ const page = () => {
     },
     {
       title: "시트",
-      dataIndex: "sheet_id",
-      key: "sheet_id",
-      render: (text) => <a>{"열기"}</a>,
+      dataIndex: "sheetId",
+      key: "sheetId",
+      render: (text) => (
+        <a
+          href={`https://docs.google.com/spreadsheets/d/${text}`}
+          target="_blank"
+        >
+          {"열기"}
+        </a>
+      ),
     },
     {
       title: "",
       key: "action",
       render: (_, record) => (
-        <Button className="!text-[12px]" size="small" onClick={() => {}}>
+        <Button
+          className="!text-[12px]"
+          size="small"
+          onClick={() => {
+            const now = new Date();
+            now.setTime(now.getTime() + 30 * 60 * 1000); // 30분
+
+            setCookie("authToken", record.sheetId, {
+              expires: now,
+            });
+
+            localStorage.setItem("u_name", record.name);
+            window.location.href = "/";
+
+            toast.success(`${record.name} 로그인 성공`);
+          }}
+        >
           로그인
         </Button>
       ),
@@ -91,7 +116,7 @@ const page = () => {
           name: item.name,
           id: item.id,
           password: item.password,
-          sheet_id: item.sheet_id,
+          sheetId: item.sheetId,
           isFetched:
             user?.id === item.id &&
             user?.password === item.password &&
