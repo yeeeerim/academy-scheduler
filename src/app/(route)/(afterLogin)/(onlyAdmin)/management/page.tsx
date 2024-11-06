@@ -1,30 +1,26 @@
 "use client";
 
 import React, { useState } from "react";
-import { Space, Table, Tag } from "antd";
+import { Button, Space, Table, Tag, Tooltip } from "antd";
 import type { TableProps } from "antd";
 import useSWR from "swr";
 
-const page = () => {
-  const [loading, setLoading] = useState<boolean>(false);
+import userList from "/tmp/data.json";
+import { ExclamationCircleTwoTone } from "@ant-design/icons";
 
+interface DataType {
+  key: string;
+  name: string;
+  id: string;
+  password: boolean;
+  sheet_id: string;
+  isFetched: boolean;
+}
+
+const page = () => {
   const { data: accountInfo, isLoading } = useSWR("/api/getAccountInfo", () => {
     return fetch("/api/getAccountInfo").then((res) => res.json());
   });
-
-  const actions: React.ReactNode[] = [
-    <button type="button" onClick={() => {}}>
-      로그인
-    </button>,
-  ];
-
-  interface DataType {
-    key: string;
-    name: string;
-    id: string;
-    password: boolean;
-    sheet_id: string;
-  }
 
   const columns: TableProps<DataType>["columns"] = [
     {
@@ -33,6 +29,18 @@ const page = () => {
       key: "name",
       sorter: (a, b) => a.name.localeCompare(b.name),
       showSorterTooltip: false,
+      render: (_, { name, isFetched }) => (
+        <div className="relative">
+          {!isFetched && (
+            <div className="absolute left-[10px]">
+              <Tooltip title="로그인 정보가 사이트에 업데이트 되지 않았습니다. 관리자에게 문의하세요.">
+                <ExclamationCircleTwoTone twoToneColor="#ff4d4f" />
+              </Tooltip>
+            </div>
+          )}
+          {name}
+        </div>
+      ),
     },
     {
       title: "아이디",
@@ -63,9 +71,9 @@ const page = () => {
       title: "",
       key: "action",
       render: (_, record) => (
-        <Space size="middle">
-          <button>로그인</button>
-        </Space>
+        <Button className="!text-[12px]" size="small" onClick={() => {}}>
+          로그인
+        </Button>
       ),
     },
   ];
@@ -77,10 +85,11 @@ const page = () => {
         id: item.id,
         password: item.password,
         sheet_id: item.sheet_id,
+        isFetched: userList.find((user) => user.id === item.id),
       }))
     : [];
 
-  return <Table<DataType> size="small" columns={columns.map((item) => ({ ...item, align: "center" }))} dataSource={data} />;
+  return <Table<DataType> loading={isLoading} size="small" columns={columns.map((item) => ({ ...item, align: "center" }))} dataSource={data} />;
 };
 
 export default page;
