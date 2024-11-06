@@ -32,7 +32,7 @@ const page = () => {
       render: (_, { name, isFetched }) => (
         <div className="relative">
           {!isFetched && (
-            <div className="absolute left-[10px]">
+            <div className="absolute left-1">
               <Tooltip title="로그인 정보가 사이트에 업데이트 되지 않았습니다. 관리자에게 문의하세요.">
                 <ExclamationCircleTwoTone twoToneColor="#ff4d4f" />
               </Tooltip>
@@ -65,7 +65,7 @@ const page = () => {
       title: "시트",
       dataIndex: "sheet_id",
       key: "sheet_id",
-      render: (text) => <a>{"새 탭으로 열기"}</a>,
+      render: (text) => <a>{"열기"}</a>,
     },
     {
       title: "",

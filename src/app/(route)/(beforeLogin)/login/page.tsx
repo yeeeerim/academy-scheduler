@@ -22,7 +22,7 @@ const LoginPage = () => {
   const isMount = useRef<boolean>(false);
   const [form] = Form.useForm();
 
-  const userList: { name: string; sheetId?: string; password: string; id: string }[] = data;
+  const userList: { name?: string; sheetId?: string; password?: string; id?: string }[] = data;
 
   useEffect(() => {
     if (id.length > 0 && pw.length > 0) {
