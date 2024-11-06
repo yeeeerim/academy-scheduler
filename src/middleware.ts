@@ -12,7 +12,11 @@ export function middleware(req: NextRequest) {
   // Check for the auth token in cookies
   const token = req.cookies.get("authToken");
 
-  if (pathname === "/management" && token.value !== process.env.NEXT_PUBLIC_ADMIN_TOKEN) {
+  if (
+    pathname === "/management" &&
+    token &&
+    token.value !== process.env.NEXT_PUBLIC_ADMIN_TOKEN
+  ) {
     return NextResponse.redirect(new URL("/", req.url));
   }
 
@@ -31,5 +35,13 @@ export function middleware(req: NextRequest) {
 
 // Apply middleware to all routes
 export const config = {
-  matcher: ["/", "/attendance-calendar", "/attendance-statistics", "/weekly-schedule", "/monthly-schedule", "/self-study", "/management"],
+  matcher: [
+    "/",
+    "/attendance-calendar",
+    "/attendance-statistics",
+    "/weekly-schedule",
+    "/monthly-schedule",
+    "/self-study",
+    "/management",
+  ],
 };
