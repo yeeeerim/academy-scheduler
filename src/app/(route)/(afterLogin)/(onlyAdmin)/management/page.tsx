@@ -46,8 +46,8 @@ const page = () => {
       title: "아이디",
       dataIndex: "id",
       key: "id",
-      sorter: (a, b) => a.id.localeCompare(b.id),
-      showSorterTooltip: false,
+      // sorter: (a, b) => a.id.localeCompare(b.id),
+      // showSorterTooltip: false,
     },
     {
       title: "비밀번호",
@@ -59,7 +59,12 @@ const page = () => {
       filterSearch: true,
       onFilter: (value, record) => record.password === value,
       dataIndex: "password",
-      render: (_, { password }) => (!!password ? <Tag color="processing">설정완료</Tag> : <Tag color="error">미설정</Tag>),
+      render: (_, { password }) =>
+        !!password ? (
+          <Tag color="processing">설정완료</Tag>
+        ) : (
+          <Tag color="error">미설정</Tag>
+        ),
     },
     {
       title: "시트",
@@ -87,12 +92,22 @@ const page = () => {
           id: item.id,
           password: item.password,
           sheet_id: item.sheet_id,
-          isFetched: user?.id === item.id && user?.password === item.password && user?.sheetId === item.sheetId,
+          isFetched:
+            user?.id === item.id &&
+            user?.password === item.password &&
+            user?.sheetId === item.sheetId,
         };
       })
     : [];
 
-  return <Table<DataType> loading={isLoading} size="small" columns={columns.map((item) => ({ ...item, align: "center" }))} dataSource={data} />;
+  return (
+    <Table<DataType>
+      loading={isLoading}
+      size="small"
+      columns={columns.map((item) => ({ ...item, align: "center" }))}
+      dataSource={data}
+    />
+  );
 };
 
 export default page;
