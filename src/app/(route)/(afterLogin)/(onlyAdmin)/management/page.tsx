@@ -124,7 +124,7 @@ const page = () => {
     <div className="flex flex-col gap-3">
       <Tooltip title={data.filter((d) => !d.isFetched).length === 0 ? "데이터가 모두 업데이트 되었습니다." : ""}>
         <Button
-          className="w-fit"
+          className="w-fit self-end"
           disabled={data.filter((d) => !d.isFetched).length === 0}
           onClick={async () => {
             if (window.confirm("데이터를 업데이트 하시겠습니까?\n(평균 소요 시간 : 75s)")) {
