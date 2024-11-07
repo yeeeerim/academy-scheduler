@@ -35,7 +35,7 @@ const page = () => {
         <div className="relative">
           {!isFetched && (
             <div className="absolute left-1">
-              <Tooltip title="로그인 정보가 사이트에 업데이트 되지 않았습니다. 관리자에게 문의하세요.">
+              <Tooltip title="로그인 정보가 사이트에 업데이트 되지 않았습니다. [데이터 업데이트] 버튼을 눌러주세요.">
                 <ExclamationCircleTwoTone twoToneColor="#ff4d4f" />
               </Tooltip>
             </div>
@@ -61,12 +61,7 @@ const page = () => {
       filterSearch: true,
       onFilter: (value, record) => record.password === value,
       dataIndex: "password",
-      render: (_, { password }) =>
-        !!password ? (
-          <Tag color="processing">설정완료</Tag>
-        ) : (
-          <Tag color="error">미설정</Tag>
-        ),
+      render: (_, { password }) => (!!password ? <Tag color="processing">설정완료</Tag> : <Tag color="error">미설정</Tag>),
     },
     {
       title: "시트",
@@ -75,10 +70,7 @@ const page = () => {
       render: (text) => {
         if (!text) return "-";
         return (
-          <a
-            href={`https://docs.google.com/spreadsheets/d/${text}`}
-            target="_blank"
-          >
+          <a href={`https://docs.google.com/spreadsheets/d/${text}`} target="_blank">
             {"열기"}
           </a>
         );
@@ -91,9 +83,7 @@ const page = () => {
         <Button
           className="!text-[12px]"
           size="small"
-          disabled={
-            !record.name || !record.id || !record.password || !record.sheetId
-          }
+          disabled={!record.name || !record.id || !record.password || !record.sheetId}
           onClick={() => {
             const now = new Date();
             now.setTime(now.getTime() + 30 * 60 * 1000); // 30분
@@ -125,22 +115,36 @@ const page = () => {
           id: item.id,
           password: item.password,
           sheetId: item.sheetId,
-          isFetched: !user
-            ? false
-            : user?.id === item.id &&
-              user?.password === item.password &&
-              user?.sheetId === item.sheetId,
+          isFetched: !user ? false : user?.id === item.id && user?.password === item.password && user?.sheetId === item.sheetId,
         };
       })
     : [];
 
   return (
-    <Table<DataType>
-      loading={isLoading}
-      size="small"
-      columns={columns.map((item) => ({ ...item, align: "center" }))}
-      dataSource={data}
-    />
+    <div className="flex flex-col gap-3">
+      <Tooltip title={data.filter((d) => !d.isFetched).length === 0 ? "데이터가 모두 업데이트 되었습니다." : ""}>
+        <Button
+          className="w-fit"
+          disabled={data.filter((d) => !d.isFetched).length === 0}
+          onClick={async () => {
+            if (window.confirm("데이터를 업데이트 하시겠습니까?\n(평균 소요 시간 : 75s)")) {
+              const res = await fetch("https://api.vercel.com/v1/integrations/deploy/prj_jTZH866kxIK7Fgijib9QBneGVowe/XxxUHaGvQE", {
+                method: "POST",
+              });
+
+              if (res.ok) {
+                alert("배포가 시작되었습니다.");
+              } else {
+                alert("배포에 실패했습니다.");
+              }
+            }
+          }}
+        >
+          데이터 업데이트
+        </Button>
+      </Tooltip>
+      <Table<DataType> loading={isLoading} size="small" columns={columns.map((item) => ({ ...item, align: "center" }))} dataSource={data} />
+    </div>
   );
 };
 
