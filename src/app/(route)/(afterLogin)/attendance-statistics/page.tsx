@@ -31,9 +31,7 @@ const AttendanceStatisticsPage = () => {
 
   const generateChartData = (data: string[][]) => {
     const dataGroupByText = groupBy(data.filter((_, i) => i % 3 === 1).flat());
-    return orderBy(Object.entries(dataGroupByText), (texts) =>
-      Object.keys(attendanceColorsByText).indexOf(texts[0])
-    ).reduce<ChartData<"pie">>(
+    return orderBy(Object.entries(dataGroupByText), (texts) => Object.keys(attendanceColorsByText).indexOf(texts[0])).reduce<ChartData<"pie">>(
       (acc, [k, arr]) => {
         if (k === "") {
           return acc;
@@ -43,10 +41,7 @@ const AttendanceStatisticsPage = () => {
           datasets: [
             {
               data: [...acc.datasets[0]?.data, arr.length],
-              backgroundColor: [
-                ...((acc.datasets[0]?.backgroundColor ?? []) as string[]),
-                token[`${attendanceColorsByText[k]}-4`],
-              ],
+              backgroundColor: [...((acc.datasets[0]?.backgroundColor ?? []) as string[]), token[`${attendanceColorsByText[k]}-4`]],
             },
           ],
         };
@@ -59,13 +54,8 @@ const AttendanceStatisticsPage = () => {
   };
 
   const generateSummaryChartData = (data: string[][]) => {
-    const dataGroupByText = groupBy(
-      data.filter((_, i) => i % 3 === 1).flat(),
-      (text) => getSummaryChartGroup(text)
-    );
-    return orderBy(Object.entries(dataGroupByText), (texts) =>
-      Object.keys(attendanceColorsByText).indexOf(texts[0])
-    ).reduce<ChartData<"pie">>(
+    const dataGroupByText = groupBy(data.filter((_, i) => i % 3 === 1).flat(), (text) => getSummaryChartGroup(text));
+    return orderBy(Object.entries(dataGroupByText), (texts) => Object.keys(attendanceColorsByText).indexOf(texts[0])).reduce<ChartData<"pie">>(
       (acc, [k, arr]) => {
         if (k === "") {
           return acc;
@@ -77,11 +67,7 @@ const AttendanceStatisticsPage = () => {
               data: [...acc.datasets[0]?.data, arr.length],
               backgroundColor: [
                 ...((acc.datasets[0]?.backgroundColor ?? []) as string[]),
-                k === "기타"
-                  ? attendanceColorsByText[k]
-                  : token[
-                      `${attendanceColorsByText[k]}-${k === "출석" ? "5" : "4"}`
-                    ],
+                k === "기타" ? attendanceColorsByText[k] : token[`${attendanceColorsByText[k]}-${k === "출석" ? "5" : "4"}`],
               ],
             },
           ],
@@ -111,23 +97,8 @@ const AttendanceStatisticsPage = () => {
       return response;
     })
   );
-  const chartDataList = useMemo(
-    () =>
-      data
-        ? [generateChartData(data[0].data), generateChartData(data[1].data)]
-        : undefined,
-    [data]
-  );
-  const summaryChartDataList = useMemo(
-    () =>
-      data
-        ? [
-            generateSummaryChartData(data[0].data),
-            generateSummaryChartData(data[1].data),
-          ]
-        : undefined,
-    [data]
-  );
+  const chartDataList = useMemo(() => (data ? [generateChartData(data[0].data), generateChartData(data[1].data)] : undefined), [data]);
+  const summaryChartDataList = useMemo(() => (data ? [generateSummaryChartData(data[0].data), generateSummaryChartData(data[1].data)] : undefined), [data]);
 
   return (
     <div className="h-full flex flex-col w-full gap-5">
@@ -144,25 +115,49 @@ const AttendanceStatisticsPage = () => {
           ]}
         />
       )}
-      <div className="flex w-full items-start justify-around max-w-[700px] [&_p]:!text-[11px]">
-        {chartDataList ? (
-          <PieChart
-            id="attendance-statistics"
-            data={chartDataList[month]}
-            unit="일"
-          />
-        ) : undefined}
-        {/* <div className="h-[16px]" /> */}
-        {summaryChartDataList ? (
-          <PieChart
-            id="attendance-statistics-summary"
-            data={summaryChartDataList[month]}
-            unit="일"
-          />
-        ) : undefined}
-      </div>
+      {isLoading ? (
+        <PieChartLoadingComponent />
+      ) : (
+        <div className="flex w-full items-start justify-around max-w-[700px] [&_p]:!text-[11px]">
+          {chartDataList ? <PieChart id="attendance-statistics" data={chartDataList[month]} unit="일" /> : undefined}
+          {summaryChartDataList ? <PieChart id="attendance-statistics-summary" data={summaryChartDataList[month]} unit="일" /> : undefined}
+        </div>
+      )}
     </div>
   );
 };
 
 export default AttendanceStatisticsPage;
+
+const PieChartLoadingComponent = () => {
+  return (
+    <div className="flex flex-col gap-3">
+      <div className="flex w-full items-start justify-around max-w-[700px]">
+        <div className="w-[40%] aspect-square bg-[#efefef] rounded-full animate-fade" />
+        <div className="w-[40%] aspect-square bg-[#efefef] rounded-full animate-fade" />
+      </div>
+      <div className="flex w-full items-start justify-around max-w-[700px]">
+        <div className="flex w-[40%] flex-col gap-1">
+          <div className="flex gap-2">
+            <div className="w-[20px] h-[20px] rounded-[6px] bg-[#efefef] animate-fade" />
+            <div className="flex-1 h-[20px] rounded-[6px] bg-[#efefef] animate-fade" />
+          </div>
+          <div className="flex gap-2">
+            <div className="w-[20px] h-[20px] rounded-[6px] bg-[#efefef] animate-fade" />
+            <div className="flex-1 h-[20px] rounded-[6px] bg-[#efefef] animate-fade" />
+          </div>
+        </div>
+        <div className="w-[40%] flex flex-col gap-1">
+          <div className="flex gap-2">
+            <div className="w-[20px] h-[20px] rounded-[6px] bg-[#efefef] animate-fade" />
+            <div className="flex-1 h-[20px] rounded-[6px] bg-[#efefef] animate-fade" />
+          </div>
+          <div className="flex gap-2">
+            <div className="w-[20px] h-[20px] rounded-[6px] bg-[#efefef] animate-fade" />
+            <div className="flex-1 h-[20px] rounded-[6px] bg-[#efefef] animate-fade" />
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+};
