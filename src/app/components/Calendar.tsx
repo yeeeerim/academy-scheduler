@@ -1,5 +1,5 @@
 import { attendanceColorsByText } from "@/consts";
-import { Segmented, Tag } from "antd";
+import { Segmented, Tag, Tooltip } from "antd";
 import React, { useState } from "react";
 import { SWRResponse } from "swr";
 
@@ -12,21 +12,10 @@ enum LoadingType {
 }
 
 const loadingData = [
-  Array.from({ length: 22 }).map((_, i) =>
-    i === 1
-      ? days
-      : Array.from({ length: 7 }).map(() =>
-          i % 4 === 2 ? LoadingType.DAY : LoadingType.SCHEDULE
-        )
-  ),
+  Array.from({ length: 22 }).map((_, i) => (i === 1 ? days : Array.from({ length: 7 }).map(() => (i % 4 === 2 ? LoadingType.DAY : LoadingType.SCHEDULE)))),
 ];
 
-export default function Calendar({
-  data,
-  error,
-  isLoading,
-  startRowIdx = 0,
-}: SWRResponse<any[], any, any> & { startRowIdx?: number }) {
+export default function Calendar({ data, error, isLoading, startRowIdx = 0 }: SWRResponse<any[], any, any> & { startRowIdx?: number }) {
   const [month, setMonth] = useState(0);
 
   if (error) return <div>Error: {error}</div>;
@@ -46,66 +35,42 @@ export default function Calendar({
         />
       )}
       <div className="text-center grid grid-cols-7 gap-x-1 row-span-5 max-w-[800px] p-6 rounded-[10px] border border-gray-100 sm:p-0 sm:border-none">
-        {(isLoading ? loadingData : data)[month]
-          .slice(1)
-          .map((row: string[], rowIndex: number) => {
-            const arr = row.slice(isLoading ? 0 : startRowIdx);
-            while (arr.length < daysLength) {
-              arr.push("");
-            }
-            return arr.map((cell, cellIndex) => {
-              const isText = rowIndex > 0 && cell && !Number(cell);
-              const isSunday = cellIndex === 0;
-              const isSaturday = cellIndex === daysLength - 1;
-              return (
-                <div
-                  className={`h-[30px] flex flex-col gap-1 ${
-                    isText
-                      ? ""
-                      : isSunday
-                      ? "text-red-500"
-                      : isSaturday
-                      ? "text-blue-500"
-                      : ""
-                  }`}
-                  key={cellIndex}
-                >
-                  {isText ? (
-                    cell.split("\n").map((line, index) => {
-                      if (line === LoadingType.DAY) {
-                        return (
-                          <div
-                            key={index}
-                            className="rounded-full bg-[#efefef] w-[24px] h-[24px] mx-auto animate-fade"
-                          />
-                        );
-                      }
-                      if (line === LoadingType.SCHEDULE) {
-                        return (
-                          <Tag
-                            key={index}
-                            className="!m-0 !h-[22px] !border-none !animate-fade"
-                          />
-                        );
-                      }
-                      return (
-                        <React.Fragment key={index}>
-                          <Tag
-                            className="!m-0"
-                            color={attendanceColorsByText[line]}
-                          >
+        {(isLoading ? loadingData : data)[month].slice(1).map((row: string[], rowIndex: number) => {
+          const arr = row.slice(isLoading ? 0 : startRowIdx);
+          while (arr.length < daysLength) {
+            arr.push("");
+          }
+          return arr.map((cell, cellIndex) => {
+            const isText = rowIndex > 0 && cell && !Number(cell);
+            const isSunday = cellIndex === 0;
+            const isSaturday = cellIndex === daysLength - 1;
+            return (
+              <div className={`h-[30px] flex flex-col gap-1 ${isText ? "" : isSunday ? "text-red-500" : isSaturday ? "text-blue-500" : ""}`} key={cellIndex}>
+                {isText ? (
+                  cell.split("\n").map((line, index) => {
+                    if (line === LoadingType.DAY) {
+                      return <div key={index} className="rounded-full bg-[#efefef] w-[24px] h-[24px] mx-auto animate-fade" />;
+                    }
+                    if (line === LoadingType.SCHEDULE) {
+                      return <Tag key={index} className="!m-0 !h-[22px] !border-none !animate-fade" />;
+                    }
+                    return (
+                      <React.Fragment key={index}>
+                        <Tooltip title={line}>
+                          <Tag className="!m-0" color={attendanceColorsByText[line]}>
                             <div className="truncate">{line}</div>
                           </Tag>
-                        </React.Fragment>
-                      );
-                    })
-                  ) : (
-                    <>{cell}</>
-                  )}
-                </div>
-              );
-            });
-          })}
+                        </Tooltip>
+                      </React.Fragment>
+                    );
+                  })
+                ) : (
+                  <>{cell}</>
+                )}
+              </div>
+            );
+          });
+        })}
       </div>
     </div>
   );
