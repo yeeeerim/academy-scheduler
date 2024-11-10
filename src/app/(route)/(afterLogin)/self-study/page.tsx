@@ -1,7 +1,17 @@
 "use client";
 
+import { Progress, Table, TableProps, Tag } from "antd";
 import React from "react";
+import { useMediaQuery } from "react-responsive";
 import useSWR from "swr";
+
+interface DataType {
+  name: string;
+  progress: { completed: number; total: number };
+  wrongAnswerNotes: string;
+  wrongAnswers: { completed: number; total: number };
+  comment: string;
+}
 
 const page = () => {
   const { data, error, isLoading } = useSWR("/api/getSelfStudyData", () =>
@@ -9,26 +19,89 @@ const page = () => {
       return await res.json();
     })
   );
-  return (
-    <div>
-      <div>과목 : {data?.subject}</div>
-      <div>레벨 : {data?.level}</div>
-      <div>선생님 : {data?.teacher_name}</div>
-      <div>
-        {data?.study_data.map((v, index) => {
-          return (
-            <div key={index} className="flex gap-2">
-              <div>{v.name}</div>
-              <div>
-                진도 : {v.progress.completed} / {v.progress.total}
-              </div>
-              <div>
-                오답 : {v.wrongAnswers.completed} / {v.wrongAnswers.total}
-              </div>
-              <div>{v.wrongAnswerNotes}</div>
+
+  const isMobile = useMediaQuery({
+    query: "(max-width:480px)",
+  });
+
+  const columns: TableProps<DataType>["columns"] = [
+    {
+      title: "단원명",
+      dataIndex: "name",
+      key: "name",
+    },
+    {
+      title: "진행률",
+      key: "progress",
+      render: (_, { progress, wrongAnswers }) => (
+        <div className="flex flex-col items-start !text-[12px]">
+          <div className="flex items-center gap-2">
+            <div>진도</div>
+            <Progress
+              className="!text-[12px]"
+              percent={Math.round((progress.completed / progress.total) * 100)}
+              steps={10}
+              strokeColor="#6fb2dc"
+            />
+            <div className="text-gray-400">
+              ({progress.completed} / {progress.total})
             </div>
-          );
-        })}
+          </div>
+
+          <div className="flex items-center gap-2">
+            <div>오답</div>
+            <Progress
+              className="!text-[12px]"
+              percent={Math.round(
+                (wrongAnswers.completed / wrongAnswers.total) * 100
+              )}
+              steps={10}
+              strokeColor="#dc6f6f"
+            />
+            <div className="text-gray-400">
+              ({wrongAnswers.completed} / {wrongAnswers.total})
+            </div>
+          </div>
+        </div>
+      ),
+    },
+    {
+      title: "오답노트",
+      dataIndex: "wrongAnswerNotes",
+      key: "wrongAnswerNotes",
+    },
+    {
+      title: "특이사항",
+      dataIndex: "comment",
+      key: "comment",
+    },
+  ];
+
+  return (
+    <div className="flex flex-col gap-4">
+      {isLoading ? (
+        <div className="w-[184px] h-[32px] bg-[#efefef] rounded-[6px] animate-fade" />
+      ) : (
+        <div className="w-fit border border-[#f0f0f0] divide-x flex [&>div]:px-2 [&>div]:py-1">
+          <div className="bg-[#fafafa] font-semibold">과목</div>
+          <div>{data?.subject}</div>
+          <div className="bg-[#fafafa] font-semibold">레벨</div>
+          <div>{data?.level}</div>
+          <div className="bg-[#fafafa] font-semibold">담임</div>
+          <div>{data?.teacher_name}</div>
+        </div>
+      )}
+
+      <div className="flex flex-col gap-2">
+        <Table<DataType>
+          loading={isLoading}
+          size="small"
+          bordered
+          columns={columns.map((item) => ({ ...item, align: "center" }))}
+          dataSource={data?.study_data}
+          scroll={{ x: "max-content" }}
+          footer={() => (isMobile ? <div>가로로 스크롤하세요.</div> : null)}
+        />
       </div>
     </div>
   );

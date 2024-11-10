@@ -26,10 +26,9 @@ export async function GET(request: Request) {
 
     const ranges = ["k6", "v6", "ae6"];
 
-    // TODO: 특이사항 추가
     for (let i = 0; i < unit; i++) {
       const row = 9 + i * 2;
-      ranges.push(`d${row}:ac${row}`);
+      ranges.push(`d${row}:ad${row}`);
     }
 
     const response = await sheets.spreadsheets.values.batchGet({
@@ -54,7 +53,8 @@ export async function GET(request: Request) {
               completed: Number(v.values[0][14]),
               total: Number(v.values[0][18]),
             },
-            wrongAnswerNotes: v.values[0][v.values[0].length - 1],
+            wrongAnswerNotes: v.values[0][25],
+            comment: v.values[0][26] || "",
           };
         }),
       ],
