@@ -12,14 +12,7 @@ const page = () => {
   );
 
   if (error) return <div>Error: {error}</div>;
-  return (
-    <SpreadsheetTable
-      {...(isLoading ? loadingData : data)}
-      subjectColors={
-        isLoading ? loadingColors : createSubjectColorMapping(data.values)
-      }
-    />
-  );
+  return <SpreadsheetTable {...(isLoading ? loadingData : data)} subjectColors={isLoading ? loadingColors : createSubjectColorMapping(data.values)} />;
 };
 
 export default page;
@@ -31,23 +24,13 @@ interface MergeData {
   endColumnIndex: number;
 }
 
-const SpreadsheetTable = ({
-  values,
-  mergedCells,
-  subjectColors,
-}: {
-  values: string[][];
-  mergedCells: MergeData[];
-  subjectColors: Colors;
-}) => {
+const SpreadsheetTable = ({ values, mergedCells, subjectColors }: { values: string[][]; mergedCells: MergeData[]; subjectColors: Colors }) => {
   const today = new Date().getDay();
   const DAY_LIST = ["", "월", "화", "수", "목", "금", "토", "일"];
 
   // Determine whether a cell is merged and get the span details
   const getCellSpan = (row: number, col: number) => {
-    const merge = mergedCells.find(
-      (m) => m.startRowIndex === row && m.startColumnIndex === col
-    );
+    const merge = mergedCells.find((m) => m.startRowIndex === row && m.startColumnIndex === col);
     if (merge) {
       const rowspan = merge.endRowIndex - merge.startRowIndex;
       const colspan = merge.endColumnIndex - merge.startColumnIndex;
@@ -68,19 +51,8 @@ const SpreadsheetTable = ({
         }}
       >
         {DAY_LIST.map((day, index) => (
-          <div
-            key={index}
-            className="text-center py-2 border-r border-gray-100"
-          >
-            <div
-              className={`w-fit px-2 mx-auto rounded-full ${
-                index % 7 === today
-                  ? "text-blue-500 bg-blue-50"
-                  : "text-gray-500"
-              }`}
-            >
-              {day}
-            </div>
+          <div key={index} className="text-center py-2 border-r border-gray-100">
+            <div className={`w-fit px-2 mx-auto rounded-full ${index % 7 === today ? "text-blue-500 bg-blue-50" : "text-gray-500"}`}>{day}</div>
           </div>
         ))}
       </div>
@@ -90,7 +62,7 @@ const SpreadsheetTable = ({
         className="grid w-full"
         style={{
           gridTemplateColumns: `repeat(${columnCount}, 1fr)`,
-          gridAutoRows: "24px", // Default row height
+          gridAutoRows: "20px", // Default row height
         }}
       >
         {values.map((row, rIndex) => {
@@ -101,29 +73,17 @@ const SpreadsheetTable = ({
             const colIndex = cIndex + 1;
             const { rowspan, colspan } = getCellSpan(rowIndex, colIndex);
             const mergedCell = mergedCells.find(
-              (m) =>
-                rowIndex >= m.startRowIndex &&
-                rowIndex < m.endRowIndex &&
-                colIndex >= m.startColumnIndex &&
-                colIndex < m.endColumnIndex
+              (m) => rowIndex >= m.startRowIndex && rowIndex < m.endRowIndex && colIndex >= m.startColumnIndex && colIndex < m.endColumnIndex
             );
 
-            if (
-              mergedCell &&
-              (mergedCell.startRowIndex !== rowIndex ||
-                mergedCell.startColumnIndex !== colIndex)
-            ) {
+            if (mergedCell && (mergedCell.startRowIndex !== rowIndex || mergedCell.startColumnIndex !== colIndex)) {
               // Skip overlapping cells within a merged range
               return null;
             }
-            const isLoadingCell =
-              cell === LoadingType.TIME || cell === LoadingType.SUBJECT;
+            const isLoadingCell = cell === LoadingType.TIME || cell === LoadingType.SUBJECT;
 
-            const isNotDataCell =
-              (!isLoadingCell && cIndex === 0) || rIndex === 0 || !cell;
-            const bgColor = isNotDataCell
-              ? "#FFF"
-              : subjectColors[cell || ""] || ""; // Get the color for the subject
+            const isNotDataCell = (!isLoadingCell && cIndex === 0) || rIndex === 0 || !cell;
+            const bgColor = isNotDataCell ? "#FFF" : subjectColors[cell || ""] || ""; // Get the color for the subject
 
             // Check if the cell above is empty for border styling
 
@@ -134,9 +94,7 @@ const SpreadsheetTable = ({
                   gridRow: `span ${rowspan}`,
                   gridColumn: `span ${colspan}`,
                 }}
-                className={`border-r border-gray-100 ${
-                  cell ? "border-b" : ""
-                } ${cIndex === 0 ? "text-[10px]" : "text-[11px] font-medium"}
+                className={`border-r border-gray-100 ${cell ? "border-b" : ""} ${cIndex === 0 ? "text-[10px]" : "text-[11px] font-medium"}
                 ${!isNotDataCell ? "p-1" : ""}
                 `}
               >
@@ -171,9 +129,7 @@ enum LoadingType {
 }
 
 const loadingDataValues = Array.from({ length: 28 }).map((_, i) =>
-  Array.from({ length: 8 }).map((_, j) =>
-    i % 2 === 1 ? (j === 0 ? LoadingType.TIME : LoadingType.SUBJECT) : ""
-  )
+  Array.from({ length: 8 }).map((_, j) => (i % 2 === 1 ? (j === 0 ? LoadingType.TIME : LoadingType.SUBJECT) : ""))
 );
 
 const loadingData: {
