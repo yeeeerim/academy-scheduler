@@ -82,8 +82,9 @@ const SpreadsheetTable = ({ values, mergedCells, subjectColors }: { values: stri
             }
             const isLoadingCell = cell === LoadingType.TIME || cell === LoadingType.SUBJECT;
 
-            const isNotDataCell = (!isLoadingCell && cIndex === 0) || rIndex === 0 || !cell;
-            const bgColor = isNotDataCell ? "#FFF" : subjectColors[cell || ""] || ""; // Get the color for the subject
+            const isTimeCell = cIndex === 0;
+            const isNotDataCell = (!isLoadingCell && isTimeCell) || rIndex === 0 || !cell;
+            const bgColor = isNotDataCell ? "#ffffff" : subjectColors[cell || ""] || ""; // Get the color for the subject
 
             // Check if the cell above is empty for border styling
 
@@ -94,18 +95,21 @@ const SpreadsheetTable = ({ values, mergedCells, subjectColors }: { values: stri
                   gridRow: `span ${rowspan}`,
                   gridColumn: `span ${colspan}`,
                 }}
-                className={`border-r border-gray-100 ${cell ? "border-b" : ""} ${cIndex === 0 ? "text-[10px]" : "text-[11px] font-medium"}
-                ${!isNotDataCell ? "p-1" : ""}
+                className={`border-r border-gray-100 text-[11px] ${cell ? "border-b" : ""} ${isTimeCell ? "font-normal" : "font-medium"}
+                ${!isNotDataCell ? "p-[2px]" : ""}
                 `}
               >
                 <div
-                  className={`text-[#333] p-1 rounded-[6px] w-full h-full flex items-center justify-center text-center
+                  className={`p-1 rounded-[4px] w-full h-full flex text-center 
+                  ${isTimeCell ? "items-start justify-end text-gray-600" : "items-center justify-center text-[#121212]"}
                   ${isLoadingCell ? "animate-fade" : ""}`}
                   style={{
                     backgroundColor: bgColor,
                   }}
                 >
+                  {!isLoadingCell && isTimeCell && <div>{cell.split(" ~ ")[0].replace("오전 ", "").replace("오후 ", "")}</div>}
                   {!isLoadingCell &&
+                    !isTimeCell &&
                     cell &&
                     cell.split("\n").map((line, index) => (
                       <React.Fragment key={index}>
