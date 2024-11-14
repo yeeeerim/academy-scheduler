@@ -143,7 +143,7 @@ const page = () => {
           데이터 업데이트
         </Button>
       </Tooltip>
-      <Table<DataType> loading={isLoading} size="small" columns={columns.map((item) => ({ ...item, align: "center" }))} dataSource={data} />
+      <Table<DataType> loading={isLoading} size="small" columns={columns.map((item) => ({ ...item, align: "center" }))} dataSource={data} pagination={false} />
     </div>
   );
 };
