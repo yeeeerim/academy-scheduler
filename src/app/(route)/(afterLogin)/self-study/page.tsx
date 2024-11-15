@@ -81,7 +81,7 @@ const page = () => {
           size="small"
           bordered
           columns={columns.map((item) => ({ ...item, align: "center" }))}
-          dataSource={data?.study_data}
+          dataSource={data?.study_data.map((item, index) => ({ ...item, key: index }))}
           scroll={{ x: "max-content" }}
           footer={() => <div className="hidden sm:block">👉 가로로 스크롤하세요.</div>}
           pagination={false}
