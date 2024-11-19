@@ -19,7 +19,7 @@ export async function GET(request: Request) {
 
     const res = await sheets.spreadsheets.values.get({
       spreadsheetId,
-      range: `${tab}!ag3`,
+      range: `${tab}!aj6`,
     });
 
     const unit = res.data.values[0][0];
