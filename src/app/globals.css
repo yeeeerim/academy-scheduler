@@ -18,12 +18,7 @@
 
 body {
   color: rgb(var(--foreground-rgb));
-  background: linear-gradient(
-      to bottom,
-      transparent,
-      rgb(var(--background-end-rgb))
-    )
-    rgb(var(--background-start-rgb));
+  background: linear-gradient(to bottom, transparent, rgb(var(--background-end-rgb))) rgb(var(--background-start-rgb));
 }
 
 /* 글로벌 h1 ~ h6 스타일링 */
@@ -33,7 +28,6 @@ h3,
 h4,
 h5,
 h6 {
-  font-family: "Arial", sans-serif; /* 기본 폰트 설정 */
   color: #333; /* 다크 그레이 색상 */
   margin: 0; /* 기본 여백 제거 */
   line-height: 1.2; /* 행 간격 설정 */
