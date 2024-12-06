@@ -1,7 +1,6 @@
 "use client";
 
-import { Descriptions, Progress, Table, TableProps, Tag, Tooltip } from "antd";
-import React from "react";
+import { Progress, Table, TableProps, Tag, Tooltip } from "antd";
 import useSWR from "swr";
 
 interface DataType {
@@ -67,15 +66,19 @@ const page = () => {
           {isLoading ? (
             <div className="w-[184px] h-[32px] bg-[#efefef] rounded-[6px] animate-fade sm:mx-3" />
           ) : (
-            <Descriptions
-              title={`${data?.subject}`}
-              items={[
-                { key: "level", label: "레벨", children: data?.level },
-                { key: "teacher", label: "담임", children: data?.teacher_name },
-              ]}
-              column={10}
-              className="[&_.ant-descriptions-header]:!mb-2"
-            />
+            <div className="flex flex-col gap-2 sm:mx-3">
+              <h6 className="font-semibold">{data?.subject}</h6>
+              <ul className="flex gap-5">
+                <li>
+                  <span className="text-gray-400">레벨 : </span>
+                  {data?.level}
+                </li>
+                <li>
+                  <span className="text-gray-400">담임 : </span>
+                  {data?.teacher_name}
+                </li>
+              </ul>
+            </div>
           )}
 
           <div className="flex flex-col gap-2">
@@ -92,62 +95,71 @@ const page = () => {
           </div>
         </div>
       </div>
-      <h5 className="flex items-center gap-2 font-bold pl-1 sm:pl-3 sm:text-[16px]">종합 진도</h5>
-      <div className="bg-white rounded-md px-6 py-4 sm:!rounded-none">
-        <div className="flex gap-3">
-          <div className="flex flex-col gap-3">
-            <Tag className="w-fit" color="geekblue">
-              진도 수행률
-            </Tag>
+      <div className="flex gap-5 mt-2 tablet:flex-col">
+        <div className="flex-1 gap-2 flex flex-col">
+          <h5 className="font-bold pl-1 sm:pl-3 sm:text-[16px]">종합 진도</h5>
+          <div className="bg-white flex-1 rounded-md px-6 py-4 sm:!rounded-none">
+            <div className="flex gap-3">
+              <div className="flex flex-col gap-3">
+                <Tag className="w-fit" color="geekblue">
+                  진도 수행률
+                </Tag>
 
-            <Tooltip
-              placement="right"
-              title={
-                data
-                  ? `(${data?.study_data.reduce((acc, cur) => acc + cur.progress.completed, 0)} / ${data?.study_data.reduce(
-                      (acc, cur) => acc + cur.progress.total,
-                      0
-                    )})`
-                  : ""
-              }
-            >
-              <Progress
-                type="circle"
-                percent={Math.round(
-                  (data?.study_data.reduce((acc, cur) => acc + cur.progress.completed, 0) /
-                    data?.study_data.reduce((acc, cur) => acc + cur.progress.total, 0)) *
-                    100
-                )}
-                strokeColor="#6fb2dc"
-              />
-            </Tooltip>
+                <Tooltip
+                  placement="right"
+                  title={
+                    data
+                      ? `(${data?.study_data.reduce((acc, cur) => acc + cur.progress.completed, 0)} / ${data?.study_data.reduce(
+                          (acc, cur) => acc + cur.progress.total,
+                          0
+                        )})`
+                      : ""
+                  }
+                >
+                  <Progress
+                    type="circle"
+                    percent={Math.round(
+                      (data?.study_data.reduce((acc, cur) => acc + cur.progress.completed, 0) /
+                        data?.study_data.reduce((acc, cur) => acc + cur.progress.total, 0)) *
+                        100
+                    )}
+                    strokeColor="#6fb2dc"
+                  />
+                </Tooltip>
+              </div>
+              <div className="flex flex-col gap-3">
+                <Tag className="w-fit" color="red">
+                  오답률
+                </Tag>
+                <Tooltip
+                  placement="right"
+                  title={
+                    data
+                      ? `(${data?.study_data.reduce((acc, cur) => acc + cur.wrongAnswers.completed, 0)} / ${data?.study_data.reduce(
+                          (acc, cur) => acc + cur.wrongAnswers.total,
+                          0
+                        )})`
+                      : ""
+                  }
+                >
+                  <Progress
+                    type="circle"
+                    percent={Math.round(
+                      (data?.study_data.reduce((acc, cur) => acc + cur.wrongAnswers.completed, 0) /
+                        data?.study_data.reduce((acc, cur) => acc + cur.wrongAnswers.total, 0)) *
+                        100
+                    )}
+                    strokeColor="#dc6f6f"
+                  />
+                </Tooltip>
+              </div>
+            </div>
           </div>
-          <div className="flex flex-col gap-3">
-            <Tag className="w-fit" color="red">
-              오답률
-            </Tag>
-            <Tooltip
-              placement="right"
-              title={
-                data
-                  ? `(${data?.study_data.reduce((acc, cur) => acc + cur.wrongAnswers.completed, 0)} / ${data?.study_data.reduce(
-                      (acc, cur) => acc + cur.wrongAnswers.total,
-                      0
-                    )})`
-                  : ""
-              }
-            >
-              <Progress
-                type="circle"
-                percent={Math.round(
-                  (data?.study_data.reduce((acc, cur) => acc + cur.wrongAnswers.completed, 0) /
-                    data?.study_data.reduce((acc, cur) => acc + cur.wrongAnswers.total, 0)) *
-                    100
-                )}
-                strokeColor="#dc6f6f"
-              />
-            </Tooltip>
-          </div>
+        </div>
+
+        <div className="flex-1 gap-2 flex flex-col">
+          <h5 className="font-bold pl-1 sm:pl-3 sm:text-[16px]">담임 피드백 및 이후 계획</h5>
+          <div className="bg-white flex-1 rounded-md px-6 py-4 sm:!rounded-none">{data?.feedback}</div>
         </div>
       </div>
     </div>
