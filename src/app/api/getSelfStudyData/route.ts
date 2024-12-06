@@ -24,7 +24,7 @@ export async function GET(request: Request) {
 
     const unit = res.data.values[0][0];
 
-    const ranges = ["k6", "v6", "ae6"];
+    const ranges = ["k6", "v6", "ae6", "ai9"];
 
     for (let i = 0; i < unit; i++) {
       const row = 9 + i * 2;
@@ -38,23 +38,25 @@ export async function GET(request: Request) {
     const values = response.data.valueRanges;
 
     const result = {
-      subject: values[0].values[0][0],
-      level: values[1].values[0][0],
-      teacher_name: values[2].values[0][0],
+      subject: values[0]?.values?.[0]?.[0] || "",
+      level: values[1]?.values?.[0]?.[0] || "",
+      teacher_name: values[2]?.values?.[0]?.[0] || "",
+      feedback: values[3]?.values?.[0]?.[0] || "",
       study_data: [
-        ...values.slice(3).map((v) => {
+        ...values.slice(4).map((v) => {
+          const row = v.values?.[0] || [];
           return {
-            name: v.values[0][0],
+            name: row[0] || "",
             progress: {
-              completed: Number(v.values[0][3]),
-              total: Number(v.values[0][7]),
+              completed: Number(row[3]) || 0,
+              total: Number(row[7]) || 0,
             },
             wrongAnswers: {
-              completed: Number(v.values[0][14]),
-              total: Number(v.values[0][18]),
+              completed: Number(row[14]) || 0,
+              total: Number(row[18]) || 0,
             },
-            wrongAnswerNotes: v.values[0][25],
-            comment: v.values[0][26] || "",
+            wrongAnswerNotes: row[25] || "",
+            comment: row[26] || "",
           };
         }),
       ],
