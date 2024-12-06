@@ -1,6 +1,6 @@
 "use client";
 
-import { Progress, Table, TableProps, Tag, Tooltip } from "antd";
+import { Descriptions, Progress, Table, TableProps, Tag, Tooltip } from "antd";
 import React from "react";
 import useSWR from "swr";
 
@@ -67,14 +67,15 @@ const page = () => {
           {isLoading ? (
             <div className="w-[184px] h-[32px] bg-[#efefef] rounded-[6px] animate-fade sm:mx-3" />
           ) : (
-            <div className="w-fit border border-[#f0f0f0] divide-x flex [&>div]:px-2 [&>div]:py-1 sm:mx-3">
-              <div className="bg-[#fafafa] font-semibold">과목</div>
-              <div>{data?.subject}</div>
-              <div className="bg-[#fafafa] font-semibold">레벨</div>
-              <div>{data?.level}</div>
-              <div className="bg-[#fafafa] font-semibold">담임</div>
-              <div>{data?.teacher_name}</div>
-            </div>
+            <Descriptions
+              title={`${data?.subject}`}
+              items={[
+                { key: "level", label: "레벨", children: data?.level },
+                { key: "teacher", label: "담임", children: data?.teacher_name },
+              ]}
+              column={10}
+              className="[&_.ant-descriptions-header]:!mb-2"
+            />
           )}
 
           <div className="flex flex-col gap-2">
