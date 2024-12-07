@@ -12,7 +12,7 @@ import {
 } from "@ant-design/icons";
 import { Avatar, Button, Layout, Menu, Popover, theme } from "antd";
 import { usePathname, useRouter } from "next/navigation";
-import { SWRConfig } from "swr";
+import useSWR, { SWRConfig } from "swr";
 import { useMediaQuery } from "react-responsive";
 import toast from "react-hot-toast";
 import { map } from "lodash";
@@ -34,6 +34,14 @@ const RootLayout = ({ children }: { children: React.ReactNode }) => {
   const [open, setOpen] = useState(false);
   const isMount = useRef(false);
   const [username, setUsername] = useState("");
+
+  const { data: navData } = useSWR("/api/getNavData", () =>
+    fetch("/api/getNavData").then(async (res) => {
+      return await res.json();
+    })
+  );
+
+  const selfStudyNav = navData?.selfStudy || [];
 
   useEffect(() => {
     if (isMount) setUsername(localStorage.getItem("u_name"));
@@ -139,7 +147,14 @@ const RootLayout = ({ children }: { children: React.ReactNode }) => {
       //   key: "/self-study",
       //   icon: <BookOutlined />,
       //   label: "자습교재 현황",
-      //   onClick: () => handleClickNav("/self-study"),
+      //   children: selfStudyNav.map((name: string, index: number) => {
+      //     const url = `/self-study?index=${index + 1}`;
+      //     return {
+      //       key: url,
+      //       label: `${name} 부교재 ${index + 1}`,
+      //       onClick: () => handleClickNav(url),
+      //     };
+      //   }),
       // },
       ...(username === "관리자"
         ? [
@@ -152,7 +167,7 @@ const RootLayout = ({ children }: { children: React.ReactNode }) => {
           ]
         : []),
     ],
-    [username]
+    [username, selfStudyNav]
   );
 
   return (

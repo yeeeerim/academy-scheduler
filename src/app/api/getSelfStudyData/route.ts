@@ -15,7 +15,7 @@ export async function GET(request: Request) {
     const cookieStore = cookies();
     const spreadsheetId = cookieStore.get("authToken")?.value;
 
-    const tab = "자습 교재 현황";
+    const tab = "자습 교재 현황1";
 
     const res = await sheets.spreadsheets.values.get({
       spreadsheetId,
