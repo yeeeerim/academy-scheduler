@@ -3,6 +3,9 @@ import { NextResponse } from "next/server";
 import { cookies } from "next/headers";
 
 export async function GET(request: Request) {
+  const { searchParams } = new URL(request.url);
+  const index = searchParams.get("index");
+
   try {
     const auth = new google.auth.GoogleAuth({
       credentials: {
@@ -15,7 +18,7 @@ export async function GET(request: Request) {
     const cookieStore = cookies();
     const spreadsheetId = cookieStore.get("authToken")?.value;
 
-    const tab = "자습 교재 현황1";
+    const tab = `자습 교재 현황${index}`;
 
     const res = await sheets.spreadsheets.values.get({
       spreadsheetId,

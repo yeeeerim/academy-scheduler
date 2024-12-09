@@ -16,12 +16,10 @@ const page = () => {
   const searchParams = useSearchParams();
   const indexParam = Number(searchParams.get("index")) || 1;
 
-  const { data, error, isLoading } = useSWR(
-    "/api/getSelfStudyData",
-    (indexParam) =>
-      fetch(`/api/getSelfStudyData`).then(async (res) => {
-        return await res.json();
-      })
+  const { data, error, isLoading } = useSWR(["/api/getSelfStudyData", indexParam], ([_, indexParam]) =>
+    fetch(`/api/getSelfStudyData?index=${indexParam}`).then(async (res) => {
+      return await res.json();
+    })
   );
 
   const columns: TableProps<DataType>["columns"] = [
@@ -37,12 +35,7 @@ const page = () => {
         <div className="flex flex-col items-start !text-[12px]">
           <div className="flex items-center gap-2">
             <div>진도</div>
-            <Progress
-              className="!text-[12px]"
-              percent={Math.round((progress.completed / progress.total) * 100)}
-              steps={10}
-              strokeColor="#6fb2dc"
-            />
+            <Progress className="!text-[12px]" percent={Math.round((progress.completed / progress.total) * 100)} steps={10} strokeColor="#6fb2dc" />
             <div className="text-gray-400">
               ({progress.completed} / {progress.total})
             </div>
@@ -50,14 +43,7 @@ const page = () => {
 
           <div className="flex items-center gap-2">
             <div>오답</div>
-            <Progress
-              className="!text-[12px]"
-              percent={Math.round(
-                (wrongAnswers.completed / wrongAnswers.total) * 100
-              )}
-              steps={10}
-              strokeColor="#dc6f6f"
-            />
+            <Progress className="!text-[12px]" percent={Math.round((wrongAnswers.completed / wrongAnswers.total) * 100)} steps={10} strokeColor="#dc6f6f" />
             <div className="text-gray-400">
               ({wrongAnswers.completed} / {wrongAnswers.total})
             </div>
@@ -110,9 +96,7 @@ const page = () => {
                 key: index,
               }))}
               scroll={{ x: "max-content" }}
-              footer={() => (
-                <div className="hidden sm:block">👉 가로로 스크롤하세요.</div>
-              )}
+              footer={() => <div className="hidden sm:block">👉 가로로 스크롤하세요.</div>}
               pagination={false}
             />
           </div>
@@ -132,10 +116,7 @@ const page = () => {
                   placement="right"
                   title={
                     data
-                      ? `(${data?.study_data.reduce(
-                          (acc, cur) => acc + cur.progress.completed,
-                          0
-                        )} / ${data?.study_data.reduce(
+                      ? `(${data?.study_data.reduce((acc, cur) => acc + cur.progress.completed, 0)} / ${data?.study_data.reduce(
                           (acc, cur) => acc + cur.progress.total,
                           0
                         )})`
@@ -145,14 +126,8 @@ const page = () => {
                   <Progress
                     type="circle"
                     percent={Math.round(
-                      (data?.study_data.reduce(
-                        (acc, cur) => acc + cur.progress.completed,
-                        0
-                      ) /
-                        data?.study_data.reduce(
-                          (acc, cur) => acc + cur.progress.total,
-                          0
-                        )) *
+                      (data?.study_data.reduce((acc, cur) => acc + cur.progress.completed, 0) /
+                        data?.study_data.reduce((acc, cur) => acc + cur.progress.total, 0)) *
                         100
                     )}
                     strokeColor="#6fb2dc"
@@ -167,10 +142,7 @@ const page = () => {
                   placement="right"
                   title={
                     data
-                      ? `(${data?.study_data.reduce(
-                          (acc, cur) => acc + cur.wrongAnswers.completed,
-                          0
-                        )} / ${data?.study_data.reduce(
+                      ? `(${data?.study_data.reduce((acc, cur) => acc + cur.wrongAnswers.completed, 0)} / ${data?.study_data.reduce(
                           (acc, cur) => acc + cur.wrongAnswers.total,
                           0
                         )})`
@@ -180,14 +152,8 @@ const page = () => {
                   <Progress
                     type="circle"
                     percent={Math.round(
-                      (data?.study_data.reduce(
-                        (acc, cur) => acc + cur.wrongAnswers.completed,
-                        0
-                      ) /
-                        data?.study_data.reduce(
-                          (acc, cur) => acc + cur.wrongAnswers.total,
-                          0
-                        )) *
+                      (data?.study_data.reduce((acc, cur) => acc + cur.wrongAnswers.completed, 0) /
+                        data?.study_data.reduce((acc, cur) => acc + cur.wrongAnswers.total, 0)) *
                         100
                     )}
                     strokeColor="#dc6f6f"
@@ -199,12 +165,8 @@ const page = () => {
         </div>
 
         <div className="flex-1 gap-2 flex flex-col">
-          <h5 className="font-bold pl-1 sm:pl-3 sm:text-[16px]">
-            담임 피드백 및 이후 계획
-          </h5>
-          <div className="bg-white flex-1 rounded-md px-6 py-4 sm:!rounded-none">
-            {data?.feedback}
-          </div>
+          <h5 className="font-bold pl-1 sm:pl-3 sm:text-[16px]">담임 피드백 및 이후 계획</h5>
+          <div className="bg-white flex-1 rounded-md px-6 py-4 sm:!rounded-none">{data?.feedback}</div>
         </div>
       </div>
     </div>
