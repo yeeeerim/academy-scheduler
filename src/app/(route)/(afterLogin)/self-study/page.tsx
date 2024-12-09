@@ -2,6 +2,7 @@
 
 import { Progress, Table, TableProps, Tag, Tooltip } from "antd";
 import useSWR from "swr";
+import { useSearchParams } from "next/navigation";
 
 interface DataType {
   name: string;
@@ -12,8 +13,11 @@ interface DataType {
 }
 
 const page = () => {
-  const { data, error, isLoading } = useSWR("/api/getSelfStudyData", () =>
-    fetch(`/api/getSelfStudyData`).then(async (res) => {
+  const searchParams = useSearchParams();
+  const indexParam = Number(searchParams.get("index")) || 1;
+
+  const { data, error, isLoading } = useSWR(["/api/getSelfStudyData", indexParam], ([_, indexParam]) =>
+    fetch(`/api/getSelfStudyData?index=${indexParam}`).then(async (res) => {
       return await res.json();
     })
   );
@@ -87,7 +91,10 @@ const page = () => {
               size="small"
               bordered
               columns={columns.map((item) => ({ ...item, align: "center" }))}
-              dataSource={data?.study_data.map((item, index) => ({ ...item, key: index }))}
+              dataSource={data?.study_data.map((item, index) => ({
+                ...item,
+                key: index,
+              }))}
               scroll={{ x: "max-content" }}
               footer={() => <div className="hidden sm:block">👉 가로로 스크롤하세요.</div>}
               pagination={false}
