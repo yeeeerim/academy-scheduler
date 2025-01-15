@@ -1,0 +1,13 @@
+User-agent: *
+Allow: /login
+
+Disallow: /
+Disallow: /attendance-calendar
+Disallow: /attendance-statistics
+Disallow: /monthly-evaluation
+Disallow: /monthly-schedule
+Disallow: /self-study
+Disallow: /test-results
+Disallow: /weekly-schedule
+Disallow: /management
+Sitemap: https://giant-edu.com/sitemap.xml

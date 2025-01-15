@@ -23,6 +23,22 @@ export const metadata = {
       },
     ],
   },
+  openGraph: {
+    title: '메인 ∙ 윈터스쿨',
+    description: '거인의발자국 윈터스쿨',
+    url: 'https://giant-edu.com',
+    type: 'website',
+    images: [
+      {
+        url: '/images/logo/color_2.png',
+        width: 1200,
+        height: 630,
+        alt: '거인의발자국 윈터스쿨',
+      },
+    ],
+    locale: 'ko_KR',
+    siteName: '거인의발자국 윈터스쿨',
+  },
   verification: {
     google: '<meta name="google-site-verification" content="Cb4WlWqeG_CqyFx9EOibkcgMuHdLFXhWXNdDtDEMqQA" />',
     other: { 'naver-site-verification': '<meta name="naver-site-verification" content="f50bed7d59be840cb992246e0e0e5265bd05b1a3" />' },
