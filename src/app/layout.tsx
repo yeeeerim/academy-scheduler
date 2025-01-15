@@ -25,6 +25,7 @@ export const metadata = {
   },
   verification: {
     google: '<meta name="google-site-verification" content="Cb4WlWqeG_CqyFx9EOibkcgMuHdLFXhWXNdDtDEMqQA" />',
+    other: { 'naver-site-verification': '<meta name="naver-site-verification" content="f50bed7d59be840cb992246e0e0e5265bd05b1a3" />' },
   },
 };
 
