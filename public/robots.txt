@@ -1,7 +1,6 @@
 User-agent: *
 Allow: /login
 
-Disallow: /
 Disallow: /attendance-calendar
 Disallow: /attendance-statistics
 Disallow: /monthly-evaluation
