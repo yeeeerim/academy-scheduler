@@ -1,10 +1,14 @@
 import { AntdRegistry } from '@ant-design/nextjs-registry';
 import './globals.css';
-import { Inter } from 'next/font/google';
 import { Toaster } from 'react-hot-toast';
 import { Analytics } from '@vercel/analytics/react';
+import localFont from 'next/font/local';
 
-const inter = Inter({ subsets: ['latin'] });
+const pretendard = localFont({
+  src: '../static/fonts/PretendardVariable.woff2',
+  display: 'swap',
+  variable: '--font-pretendard',
+});
 
 export const metadata = {
   title: '메인 ∙ 윈터스쿨',
@@ -48,6 +52,7 @@ export const metadata = {
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
     <html lang="en">
+      {/* <body className={`${pretendard.className} antialiased`}> */}
       <body>
         <Toaster position="bottom-center" />
         <Analytics />
