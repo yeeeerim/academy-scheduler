@@ -1,28 +1,19 @@
-"use client";
+'use client';
 
-import React, { useEffect, useMemo, useRef, useState } from "react";
-import {
-  BookOutlined,
-  MenuFoldOutlined,
-  SettingOutlined,
-  MenuUnfoldOutlined,
-  ScheduleOutlined,
-  TableOutlined,
-  UserOutlined,
-} from "@ant-design/icons";
-import { Avatar, Button, Layout, Menu, Popover, theme } from "antd";
-import { usePathname, useRouter } from "next/navigation";
-import useSWR, { SWRConfig } from "swr";
-import { useMediaQuery } from "react-responsive";
-import toast from "react-hot-toast";
-import { map } from "lodash";
-import "chart.js/auto";
+import React, { useEffect, useMemo, useRef, useState } from 'react';
+import { BookOutlined, MenuFoldOutlined, SettingOutlined, MenuUnfoldOutlined, ScheduleOutlined, TableOutlined, UserOutlined } from '@ant-design/icons';
+import { Avatar, Button, Layout, Menu, Popover, theme } from 'antd';
+import { usePathname, useRouter } from 'next/navigation';
+import useSWR, { SWRConfig } from 'swr';
+import { useMediaQuery } from 'react-responsive';
+import toast from 'react-hot-toast';
+import 'chart.js/auto';
 
 const { Header, Sider, Content } = Layout;
 
 const RootLayout = ({ children }: { children: React.ReactNode }) => {
   const isMobile = useMediaQuery({
-    query: "(max-width:480px)",
+    query: '(max-width:480px)',
   });
 
   const [collapsed, setCollapsed] = useState(false);
@@ -33,10 +24,10 @@ const RootLayout = ({ children }: { children: React.ReactNode }) => {
   const pathname = usePathname();
   const [open, setOpen] = useState(false);
   const isMount = useRef(false);
-  const [username, setUsername] = useState("");
+  const [username, setUsername] = useState('');
 
-  const { data: navData } = useSWR("/api/getNavData", () =>
-    fetch("/api/getNavData").then(async (res) => {
+  const { data: navData } = useSWR('/api/getNavData', () =>
+    fetch('/api/getNavData').then(async (res) => {
       return await res.json();
     })
   );
@@ -44,7 +35,7 @@ const RootLayout = ({ children }: { children: React.ReactNode }) => {
   const selfStudyNav = navData?.selfStudy || [];
 
   useEffect(() => {
-    if (isMount) setUsername(localStorage.getItem("u_name"));
+    if (isMount) setUsername(localStorage.getItem('u_name'));
   }, [isMount]);
 
   const handleOpenChange = (newOpen: boolean) => {
@@ -59,12 +50,11 @@ const RootLayout = ({ children }: { children: React.ReactNode }) => {
   // 영역 외 클릭 감지
   useEffect(() => {
     const handleOutside = (e: any) => {
-      if (ref.current && !ref.current.contains(e.target) && isMobile)
-        setCollapsed(true);
+      if (ref.current && !ref.current.contains(e.target) && isMobile) setCollapsed(true);
     };
-    document.addEventListener("mousedown", handleOutside);
+    document.addEventListener('mousedown', handleOutside);
     return () => {
-      document.removeEventListener("mousedown", handleOutside);
+      document.removeEventListener('mousedown', handleOutside);
     };
   }, [ref, isMobile]);
 
@@ -74,9 +64,9 @@ const RootLayout = ({ children }: { children: React.ReactNode }) => {
   };
 
   const logout = () => {
-    toast.success("로그아웃 되었습니다.");
-    document.cookie = "authToken=; Max-Age=0; path=/;";
-    window.location.replace("/login");
+    toast.success('로그아웃 되었습니다.');
+    document.cookie = 'authToken=; Max-Age=0; path=/;';
+    window.location.replace('/login');
   };
 
   const handleClickNav = (url: string) => {
@@ -87,66 +77,43 @@ const RootLayout = ({ children }: { children: React.ReactNode }) => {
   const sidebarInfo = useMemo(
     () => [
       {
-        key: "1",
+        key: '1',
         icon: <TableOutlined />,
-        label: "시간표",
+        label: '시간표',
         children: [
           {
-            key: "/weekly-schedule",
-            label: "주간시간표",
-            onClick: () => handleClickNav("/weekly-schedule"),
+            key: '/weekly-schedule',
+            label: '주간시간표',
+            onClick: () => handleClickNav('/weekly-schedule'),
           },
           {
-            key: "/monthly-schedule",
-            label: "월간시간표",
-            onClick: () => handleClickNav("/monthly-schedule"),
+            key: '/monthly-schedule',
+            label: '월간시간표',
+            onClick: () => handleClickNav('/monthly-schedule'),
           },
         ],
       },
       {
-        key: "2",
+        key: '2',
         icon: <ScheduleOutlined />,
-        label: "출결정보",
+        label: '출결정보',
         children: [
           {
-            key: "/attendance-calendar",
-            label: "캘린더",
-            onClick: () => handleClickNav("/attendance-calendar"),
+            key: '/attendance-calendar',
+            label: '캘린더',
+            onClick: () => handleClickNav('/attendance-calendar'),
           },
           {
-            key: "/attendance-statistics",
-            label: "통계",
-            onClick: () => handleClickNav("/attendance-statistics"),
+            key: '/attendance-statistics',
+            label: '통계',
+            onClick: () => handleClickNav('/attendance-statistics'),
           },
         ],
       },
-      // {
-      //   key: "3",
-      //   icon: <EditOutlined />,
-      //   label: "테스트 결과",
-      //   children: [
-      //     {
-      //       key: "3-1",
-      //       label: "국어",
-      //       onClick: () => navigate("/test-results?subject=ko"),
-      //     },
-      //     {
-      //       key: "3-2",
-      //       label: "영어",
-      //       onClick: () => navigate("/test-results?subject=en"),
-      //     },
-      //   ],
-      // },
-      // {
-      //   key: "4",
-      //   icon: <PieChartOutlined />,
-      //   label: "월말평가",
-      //   onClick: () => navigate("/monthly-evaluation"),
-      // },
       {
-        key: "/self-study",
+        key: '/self-study',
         icon: <BookOutlined />,
-        label: "자습교재 현황",
+        label: '자습교재 현황',
         children: selfStudyNav.map((name: string, index: number) => {
           const url = `/self-study?index=${index + 1}`;
           return {
@@ -156,13 +123,13 @@ const RootLayout = ({ children }: { children: React.ReactNode }) => {
           };
         }),
       },
-      ...(username === "관리자"
+      ...(username === '관리자'
         ? [
             {
-              key: "/management",
+              key: '/management',
               icon: <SettingOutlined />,
-              label: "학생 관리",
-              onClick: () => handleClickNav("/management"),
+              label: '학생 관리',
+              onClick: () => handleClickNav('/management'),
             },
           ]
         : []),
@@ -180,12 +147,7 @@ const RootLayout = ({ children }: { children: React.ReactNode }) => {
       }}
     >
       <Layout className="!min-h-screen h-max relative">
-        {!collapsed && isMount.current && (
-          <div
-            id="dim"
-            className="hidden bottom-0 sm:block sm:w-full sm:h-full sm:bg-[#00000082] sm:z-20 sm:absolute"
-          />
-        )}
+        {!collapsed && isMount.current && <div id="dim" className="hidden bottom-0 sm:block sm:w-full sm:h-full sm:bg-[#00000082] sm:z-20 sm:absolute" />}
         <Sider
           ref={ref}
           breakpoint="sm"
@@ -197,33 +159,20 @@ const RootLayout = ({ children }: { children: React.ReactNode }) => {
           collapsible
           collapsed={collapsed}
           collapsedWidth={0}
-          className={`sm:!fixed ${
-            !isMount.current ? "sm:hidden" : ""
-          }  sm:!left-0 !sm:top-0 sm:!h-full sm:z-20 sm:shadow-[2px_2px_10px_0#333]`}
+          className={`sm:!fixed ${!isMount.current ? 'sm:hidden' : ''}  sm:!left-0 !sm:top-0 sm:!h-full sm:z-20 sm:shadow-[2px_2px_10px_0#333]`}
         >
           {/* 로고 */}
           <a href="/">
-            <img
-              className="p-5 !pb-0"
-              src="/images/logo/white_1.png"
-              alt="logo"
-            />
+            <img className="p-5 !pb-0" src="/images/logo/white_1.png" alt="logo" />
           </a>
           {/* 버전정보 */}
-          <div className="flex justify-end px-4 py-2">
-            <div className="text-[10px] bg-[#e5e7ebaa] w-fit rounded-full px-1">
-              v1.1.0
-            </div>
+          <div className="flex justify-end">
+            <span className="text-[10px] mx-4 my-2 bg-[#e5e7ebaa] rounded-full px-1">v1.1.0</span>
           </div>
           {/* 메뉴 */}
-          <Menu
-            theme="dark"
-            mode="inline"
-            defaultSelectedKeys={[pathname || "1"]}
-            items={sidebarInfo}
-          />
+          <Menu theme="dark" mode="inline" defaultSelectedKeys={[pathname || '1']} items={sidebarInfo} />
         </Sider>
-        <Layout className="">
+        <Layout className="max-h-screen overflow-auto">
           <Header
             className="!py-0 !px-5 flex w-full items-center justify-between sm:fixed sm:shadow-[1px_1px_10px_0#eee] sm:z-10"
             style={{ background: colorBgContainer }}
@@ -239,10 +188,7 @@ const RootLayout = ({ children }: { children: React.ReactNode }) => {
               <Popover
                 content={
                   <div className="p-0">
-                    <button
-                      onClick={logout}
-                      className="px-3 rounded-[4px] py-1 hover:bg-gray-100"
-                    >
+                    <button onClick={logout} className="px-3 rounded-[4px] py-1 hover:bg-gray-100">
                       로그아웃
                     </button>
                   </div>
@@ -256,9 +202,7 @@ const RootLayout = ({ children }: { children: React.ReactNode }) => {
               </Popover>
             </div>
           </Header>
-          <Content className="min-h-[280px] my-6 mx-4 sm:!mx-0 sm:!my-3 sm:!px-0 sm:!mt-[80px]">
-            {children}
-          </Content>
+          <Content className="min-h-[280px] my-6 mx-4 sm:!mx-0 sm:!my-3 sm:!px-0 sm:!mt-[80px]">{children}</Content>
         </Layout>
       </Layout>
     </SWRConfig>
