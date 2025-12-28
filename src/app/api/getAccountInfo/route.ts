@@ -26,20 +26,36 @@ export async function GET(request: Request) {
       fields: "sheets.data.rowData.values",
     });
 
-    const nameData = res.data.sheets[0].data[0].rowData.map((row) => row.values[0]?.formattedValue || null).filter((value) => value !== null);
+    const nameData = res.data.sheets[0].data[0].rowData.map(
+      (row) => row.values[0]?.formattedValue || null
+    );
 
-    const sheetIdData = res.data.sheets[0].data[1].rowData.map((row) => row.values[0]?.formattedValue || null).filter((value) => value !== null);
+    const sheetIdData = res.data.sheets[0].data[1].rowData.map(
+      (row) => row.values[0]?.formattedValue || null
+    );
 
-    const idData = res.data.sheets[0].data[2].rowData.map((row) => row.values[0]?.formattedValue || null).filter((value) => value !== null);
+    const idData = res.data.sheets[0].data[2].rowData.map(
+      (row) => row.values[0]?.formattedValue || null
+    );
 
-    const passwordData = res.data.sheets[0].data[3].rowData.map((row) => row.values[0]?.formattedValue || null).filter((value) => value !== null);
+    const passwordData = res.data.sheets[0].data[3].rowData.map(
+      (row) => row.values[0]?.formattedValue || null
+    );
 
-    const combinedData = nameData.map((_, index) => ({
-      name: nameData[index],
-      sheetId: sheetIdData[index],
-      id: idData[index],
-      password: passwordData[index],
-    }));
+    const combinedData = nameData
+      .map((_, index) => ({
+        name: nameData[index],
+        sheetId: sheetIdData[index],
+        id: idData[index],
+        password: passwordData[index],
+      }))
+      .filter(
+        (value) =>
+          (value.name && value.name !== "#REF!") ||
+          (value.sheetId && value.sheetId !== "#REF!") ||
+          (value.id && value.id !== "#REF!") ||
+          (value.password && value.password !== "#REF!")
+      );
 
     return NextResponse.json(combinedData);
   } catch (error) {
