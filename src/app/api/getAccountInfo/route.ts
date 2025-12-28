@@ -51,10 +51,11 @@ export async function GET(request: Request) {
       }))
       .filter(
         (value) =>
-          (value.name && value.name !== "#REF!") ||
-          (value.sheetId && value.sheetId !== "#REF!") ||
-          (value.id && value.id !== "#REF!") ||
-          (value.password && value.password !== "#REF!")
+          value.name &&
+          value.name !== "#REF!" &&
+          ((value.sheetId && value.sheetId !== "#REF!") ||
+            (value.id && value.id !== "#REF!") ||
+            (value.password && value.password !== "#REF!"))
       );
 
     return NextResponse.json(combinedData);

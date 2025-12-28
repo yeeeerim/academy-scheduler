@@ -59,10 +59,11 @@ async function fetchData() {
       }))
       .filter(
         (value) =>
-          (value.name && value.name !== "#REF!") ||
-          (value.sheetId && value.sheetId !== "#REF!") ||
-          (value.id && value.id !== "#REF!") ||
-          (value.password && value.password !== "#REF!")
+          value.name &&
+          value.name !== "#REF!" &&
+          ((value.sheetId && value.sheetId !== "#REF!") ||
+            (value.id && value.id !== "#REF!") ||
+            (value.password && value.password !== "#REF!"))
       );
 
     // Write the data to a JSON file
