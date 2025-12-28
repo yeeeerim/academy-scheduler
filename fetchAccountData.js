@@ -33,21 +33,37 @@ async function fetchData() {
     });
 
     // Extract data from each column
-    const nameData = response.data.sheets[0].data[0].rowData.map((row) => row.values[0]?.formattedValue || null).filter((value) => value !== null);
+    const nameData = response.data.sheets[0].data[0].rowData.map(
+      (row) => row.values[0]?.formattedValue || null
+    );
 
-    const sheetIdData = response.data.sheets[0].data[1].rowData.map((row) => row.values[0]?.formattedValue || null).filter((value) => value !== null);
+    const sheetIdData = response.data.sheets[0].data[1].rowData.map(
+      (row) => row.values[0]?.formattedValue || null
+    );
 
-    const idData = response.data.sheets[0].data[2].rowData.map((row) => row.values[0]?.formattedValue || null).filter((value) => value !== null);
+    const idData = response.data.sheets[0].data[2].rowData.map(
+      (row) => row.values[0]?.formattedValue || null
+    );
 
-    const passwordData = response.data.sheets[0].data[3].rowData.map((row) => row.values[0]?.formattedValue || null).filter((value) => value !== null);
+    const passwordData = response.data.sheets[0].data[3].rowData.map(
+      (row) => row.values[0]?.formattedValue || null
+    );
 
     // Combine data into JSON structure
-    const combinedData = nameData.map((_, index) => ({
-      name: nameData[index],
-      sheetId: sheetIdData[index],
-      id: idData[index],
-      password: passwordData[index],
-    }));
+    const combinedData = nameData
+      .map((_, index) => ({
+        name: nameData[index],
+        sheetId: sheetIdData[index],
+        id: idData[index],
+        password: passwordData[index],
+      }))
+      .filter(
+        (value) =>
+          (value.name && value.name !== "#REF!") ||
+          (value.sheetId && value.sheetId !== "#REF!") ||
+          (value.id && value.id !== "#REF!") ||
+          (value.password && value.password !== "#REF!")
+      );
 
     // Write the data to a JSON file
     const filePath = join("/tmp", "data.json");
